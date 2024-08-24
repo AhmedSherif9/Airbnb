@@ -22,6 +22,9 @@ const NewPlacePage = () => {
   const [perks, setPerks] = useState([]);
   const [placePhotos, setPlacePhotos] = useState([]);
 
+  const [selectedFiles, setSelectedFiles] = useState([]);
+  // const fileRef = useRef();
+
   const { id } = useParams();
 
   useEffect(() => {
@@ -88,6 +91,10 @@ const NewPlacePage = () => {
   const addPhotoByLink = (photo) => {
     setPlacePhotos([...placePhotos, photo]);
     photoRef.current.value = "";
+  };
+
+  const addPhotoFromDevice = () => {
+    
   };
 
   const priorityPhoto = (photo) => {
@@ -209,9 +216,13 @@ const NewPlacePage = () => {
                       priorityPhoto(photo);
                     }}
                     className="absolute bottom-0 left-0 m-2 text-white
-                   bg-gray-950 bg-opacity-50 p-2 rounded-xl"
+                   bg-gray-950 bg-opacity-50 p-2.5 rounded-xl"
                   >
-                    {index == 0 ? <FaStar /> : <FaRegStar />}
+                    {index == 0 ? (
+                      <FaStar className="scale-110" />
+                    ) : (
+                      <FaRegStar className="scale-110" />
+                    )}
                   </button>
                   <button
                     type="button"
@@ -219,9 +230,9 @@ const NewPlacePage = () => {
                       deletePhoto(photo);
                     }}
                     className="absolute bottom-0 right-0 m-2 text-white
-                   bg-gray-950 bg-opacity-50 p-2 rounded-xl"
+                   bg-gray-950 bg-opacity-50 p-2.5 rounded-xl"
                   >
-                    <FaRegTrashAlt />
+                    <FaRegTrashAlt className="scale-110" />
                   </button>
                 </article>
               );
@@ -231,10 +242,17 @@ const NewPlacePage = () => {
               className="h-30 rounded-xl overflow-hidden 
             flex justify-center items-center border border-gray-200"
             >
-              <button className="flex items-center gap-2 text-gray-500">
+              <label className="flex items-center gap-2 text-gray-500">
                 <MdOutlineCloudUpload className="scale-125 text-2xl" />
                 <span className="text-xl">Upload</span>
-              </button>
+                <input
+                  type="file"
+                  multiple
+                  className="hidden"
+                  onChange={addPhotoFromDevice}
+                  // ref={fileRef}
+                />
+              </label>
             </article>
           </div>
         )}
