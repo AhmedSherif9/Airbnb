@@ -22,9 +22,6 @@ const NewPlacePage = () => {
   const [perks, setPerks] = useState([]);
   const [placePhotos, setPlacePhotos] = useState([]);
 
-  const [selectedFiles, setSelectedFiles] = useState([]);
-  // const fileRef = useRef();
-
   const { id } = useParams();
 
   useEffect(() => {
@@ -93,8 +90,28 @@ const NewPlacePage = () => {
     photoRef.current.value = "";
   };
 
-  const addPhotoFromDevice = () => {
-    
+  const addPhotoFromDevice = async (e) => {
+    const files = e.target.files;
+    const formData = new FormData();
+
+    for (let i = 0; i < files.length; i++) {
+      formData.append("photos", files[i]);
+    }
+
+    try {
+      const response = await fetch("http://localhost:3001/uploadPhotos", {
+        method: "POST",
+        body: formData,
+        credentials: "include",
+      });
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      const data = await response.json();
+      setPlacePhotos([...placePhotos, ...data.urls]);
+    } catch (error) {
+      console.error("Error uploading files:", error);
+    }
   };
 
   const priorityPhoto = (photo) => {
@@ -242,7 +259,7 @@ const NewPlacePage = () => {
               className="h-30 rounded-xl overflow-hidden 
             flex justify-center items-center border border-gray-200"
             >
-              <label className="flex items-center gap-2 text-gray-500">
+              <label className="flex items-center gap-2 text-gray-500 cursor-pointer">
                 <MdOutlineCloudUpload className="scale-125 text-2xl" />
                 <span className="text-xl">Upload</span>
                 <input
@@ -250,7 +267,6 @@ const NewPlacePage = () => {
                   multiple
                   className="hidden"
                   onChange={addPhotoFromDevice}
-                  // ref={fileRef}
                 />
               </label>
             </article>
