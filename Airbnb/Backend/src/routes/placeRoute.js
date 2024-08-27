@@ -3,6 +3,21 @@ import PlaceModel from "../models/Place.js";
 import validateJWT from "../middlewares/validateJWT.js";
 const router = express.Router();
 
+//get searched place
+router.get("/search", async (request, response) => {
+  try {
+    const { searchTerm } = request.query;
+    const allPlaces = await PlaceModel.find();
+    const places = allPlaces?.filter((place) =>
+      place?.title.includes(searchTerm)
+    );
+    response.status(200).json({ places });
+  } catch (error) {
+    console.log("error has taken place", error);
+    response.status(500).send("Something went wrong!");
+  }
+});
+
 //get all places
 router.get("/", async (request, response) => {
   try {

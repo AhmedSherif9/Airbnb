@@ -3,11 +3,17 @@ import { GiHamburgerMenu } from "react-icons/gi";
 import { FaUser } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { useAuth } from "../Context/AuthContext";
+import { useSearch } from "../Context/SearchContext";
+import { useState } from "react";
+import { FaSearch } from "react-icons/fa";
 
 const Header = () => {
   const { isAuthenticated, user } = useAuth();
+  const { setSearchTerm, searchTerm } = useSearch();
+  const [showBar, setShowBar] = useState(false);
+
   return (
-    <header className="flex justify-between items-center">
+    <header className="flex justify-between items-center relative">
       <Link
         to="/"
         className="font-black flex gap-1 items-center cursor-pointer"
@@ -36,9 +42,20 @@ const Header = () => {
         <div className="border border-gray-300"></div>
         <div className="flex gap-2 items-center">
           <span>Add guests</span>
-          <div className="rounded-full p-1 bg-primary ">
+          <button
+            onClick={() =>
+              setShowBar((prev) => {
+                if (prev) {
+                  setSearchTerm("");
+                  return false;
+                }
+                return true;
+              })
+            }
+            className="rounded-full p-1 bg-primary "
+          >
             <CiSearch className="invert" />
-          </div>
+          </button>
         </div>
       </div>
 
@@ -56,6 +73,23 @@ const Header = () => {
           <></>
         )}
       </Link>
+      {showBar && (
+        <div className="absolute top-12 left-44 px-3 py-1.5 min-w-96">
+          <label className="flex items-center gap-2 w-full">
+            <FaSearch className="absolute left-7" />
+            <input
+              onChange={(e) => {
+                setSearchTerm(e.target.value);
+              }}
+              value={searchTerm}
+              type="text"
+              placeholder="Search here..."
+              className="flex-grow rounded-full border border-gray-200 pl-10 pr-3 py-1.5 
+            placeholder:text-sm placeholder:font-semibold"
+            />
+          </label>
+        </div>
+      )}
     </header>
   );
 };
