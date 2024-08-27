@@ -40,7 +40,7 @@ const HomePage = () => {
     } else {
       fetchSearch();
     }
-  });
+  }, [searchTerm]);
 
   return (
     <div className="grid grid-cols-3 gap-7">

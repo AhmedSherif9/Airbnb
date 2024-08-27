@@ -1,20 +1,22 @@
 import { CiSearch } from "react-icons/ci";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { FaUser } from "react-icons/fa";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "../Context/AuthContext";
 import { useSearch } from "../Context/SearchContext";
-import { useState } from "react";
-import { FaSearch } from "react-icons/fa";
 
 const Header = () => {
   const { isAuthenticated, user } = useAuth();
-  const { setSearchTerm, searchTerm } = useSearch();
-  const [showBar, setShowBar] = useState(false);
+  const { setSearchTerm, searchTerm, searchBar, setSearchBar, close } =
+    useSearch();
+
+  const location = useLocation();
+  const isHomePage = location.pathname === "/";
 
   return (
     <header className="flex justify-between items-center relative">
       <Link
+        onClick={close}
         to="/"
         className="font-black flex gap-1 items-center cursor-pointer"
       >
@@ -35,31 +37,63 @@ const Header = () => {
         <span>airbnb</span>
       </Link>
 
-      <div className="px-4 py-2 border border-gray-200 font-semibold rounded-full shadow-md shadow-gray-300 flex gap-2 cursor-pointer">
-        <span>Anywhere</span>
-        <div className="border border-gray-300"></div>
-        <span>Any week</span>
-        <div className="border border-gray-300"></div>
-        <div className="flex gap-2 items-center">
-          <span>Add guests</span>
-          <button
-            onClick={() =>
-              setShowBar((prev) => {
-                if (prev) {
-                  setSearchTerm("");
-                  return false;
-                }
-                return true;
-              })
-            }
-            className="rounded-full p-1 bg-primary "
-          >
-            <CiSearch className="invert" />
-          </button>
-        </div>
+      <div
+        className="w-2/5 px-4 py-2 border border-gray-200 font-semibold 
+      rounded-full shadow-md shadow-gray-300 flex gap-2 cursor-pointer"
+      >
+        {searchBar ? (
+          <>
+            <input
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              type="text"
+              placeholder="search for a place..."
+              className="flex-grow border-none outline-none
+            placeholder:text-sm placeholder:font-semibold"
+            />
+          </>
+        ) : (
+          <>
+            <span>Anywhere</span>
+            <div className="border border-gray-300"></div>
+            <span>Any week</span>
+            <div className="border border-gray-300"></div>
+            <span>Add guests</span>
+          </>
+        )}
+        <button
+          disabled={!isHomePage}
+          onClick={() =>
+            setSearchBar((prev) => {
+              if (prev) {
+                setSearchTerm("");
+                return false;
+              }
+              return true;
+            })
+          }
+          className={`rounded-full p-1 ${
+            !isHomePage
+              ? "bg-gray-600"
+              : searchBar
+              ? "bg-white border border-1 border-primary"
+              : "bg-primary"
+          }`}
+        >
+          <CiSearch
+            className={`scale-110 ${
+              !isHomePage
+                ? "text-white"
+                : searchBar
+                ? "text-primary"
+                : "text-white"
+            }`}
+          />
+        </button>
       </div>
 
       <Link
+        onClick={close}
         to={isAuthenticated ? "/userpage/profile" : "/authenticate"}
         className="py-1.5 px-4 flex items-center gap-2 border-2 border-gray-200 rounded-full cursor-pointer"
       >
@@ -73,23 +107,6 @@ const Header = () => {
           <></>
         )}
       </Link>
-      {showBar && (
-        <div className="absolute top-12 left-44 px-3 py-1.5 min-w-96">
-          <label className="flex items-center gap-2 w-full">
-            <FaSearch className="absolute left-7" />
-            <input
-              onChange={(e) => {
-                setSearchTerm(e.target.value);
-              }}
-              value={searchTerm}
-              type="text"
-              placeholder="Search here..."
-              className="flex-grow rounded-full border border-gray-200 pl-10 pr-3 py-1.5 
-            placeholder:text-sm placeholder:font-semibold"
-            />
-          </label>
-        </div>
-      )}
     </header>
   );
 };

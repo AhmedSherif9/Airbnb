@@ -7,6 +7,7 @@ import { FaStar } from "react-icons/fa";
 import { FaRegTrashAlt } from "react-icons/fa";
 import { FaRegStar } from "react-icons/fa";
 import { MdOutlineCloudUpload } from "react-icons/md";
+import { toast } from "react-hot-toast";
 
 const NewPlacePage = () => {
   const titleRef = useRef();
@@ -28,7 +29,7 @@ const NewPlacePage = () => {
     const fetchMyExistingPlace = async () => {
       try {
         const response = await fetch(
-          "http://localhost:3001/places/user-place/" + id,
+          "http://localhost:3001/places/user-places/" + id,
           {
             credentials: "include",
           }
@@ -86,8 +87,10 @@ const NewPlacePage = () => {
   };
 
   const addPhotoByLink = (photo) => {
+    toast.loading("Adding Photo", { id: "link", duration: 3000 });
     setPlacePhotos([...placePhotos, photo]);
     photoRef.current.value = "";
+    toast.success("Photo Added Successfully", { id: "link", duration: 3000 });
   };
 
   const addPhotoFromDevice = async (e) => {
@@ -99,6 +102,7 @@ const NewPlacePage = () => {
     }
 
     try {
+      toast.loading("Uploading Photo", { id: "photo", duration: 3000 });
       const response = await fetch("http://localhost:3001/uploadPhotos", {
         method: "POST",
         body: formData,
@@ -109,8 +113,16 @@ const NewPlacePage = () => {
       }
       const data = await response.json();
       setPlacePhotos([...placePhotos, ...data.urls]);
+      toast.success("Photo Uploaded Successfully", {
+        id: "photo",
+        duration: 3000,
+      });
     } catch (error) {
       console.error("Error uploading files:", error);
+      toast.error("Uploading Photo Failed", {
+        id: "photo",
+        duration: 3000,
+      });
     }
   };
 
@@ -139,6 +151,10 @@ const NewPlacePage = () => {
     };
     if (id != "newplace") {
       try {
+        toast.loading(`Editing ${titleRef.current.value}`, {
+          id: "edit",
+          duration: 3000,
+        });
         const response = await fetch("http://localhost:3001/places/" + id, {
           method: "PUT",
           headers: {
@@ -150,11 +166,23 @@ const NewPlacePage = () => {
         if (response.status != 201) {
           throw new Error("Network response was not ok");
         }
+        toast.success(`${titleRef.current.value} Edited Successfully`, {
+          id: "edit",
+          duration: 3000,
+        });
       } catch (error) {
         console.error("error is", error);
+        toast.error(`Editing ${titleRef.current.value} Failed`, {
+          id: "edit",
+          duration: 3000,
+        });
       }
     } else {
       try {
+        toast.loading(`Adding ${titleRef.current.value}`, {
+          id: "add",
+          duration: 3000,
+        });
         const response = await fetch("http://localhost:3001/places/", {
           method: "POST",
           headers: {
@@ -166,8 +194,16 @@ const NewPlacePage = () => {
         if (response.status != 201) {
           throw new Error("Network response was not ok");
         }
+        toast.success(`${titleRef.current.value} Added Successfully`, {
+          id: "add",
+          duration: 3000,
+        });
       } catch (error) {
         console.error("error is", error);
+        toast.error(`Adding ${titleRef.current.value} Failed`, {
+          id: "add",
+          duration: 3000,
+        });
       }
     }
   };

@@ -1,5 +1,6 @@
 import { useAuth } from "../../Context/AuthContext";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-hot-toast";
 
 const Profile = () => {
   const { user, Logout } = useAuth();
@@ -7,10 +8,16 @@ const Profile = () => {
 
   const getOut = async () => {
     try {
+      toast.loading("Logging Out", { id: "logout", duration: 3000 });
       await Logout();
+      toast.success("Logged Out Successfully", {
+        id: "logout",
+        duration: 3000,
+      });
       navigate("/");
     } catch (error) {
       console.error("error is ", error);
+      toast.error("Logging Out Failed", { id: "logout", duration: 3000 });
     }
   };
 

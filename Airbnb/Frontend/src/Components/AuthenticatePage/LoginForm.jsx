@@ -2,6 +2,7 @@ import TextField from "@mui/material/TextField";
 import { useRef } from "react";
 import { useAuth } from "../../Context/AuthContext";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-hot-toast";
 
 const LoginForm = () => {
   const { Login } = useAuth();
@@ -18,10 +19,16 @@ const LoginForm = () => {
       }
       const email = emailRef.current.value;
       const password = passwordRef.current.value;
+      toast.loading("Logging In", {
+        id: "login",
+        duration: 3000,
+      });
       await Login({ email, password });
+      toast.success("Logged In Successfully", { id: "login", duration: 3000 });
       navigate("/");
     } catch (error) {
       console.error(`error is ${error}`);
+      toast.error("Logging In Failed", { id: "login", duration: 3000 });
     }
   };
 

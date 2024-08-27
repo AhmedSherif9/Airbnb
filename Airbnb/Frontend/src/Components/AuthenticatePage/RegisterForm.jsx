@@ -2,6 +2,7 @@ import TextField from "@mui/material/TextField";
 import { useRef } from "react";
 import { useAuth } from "../../Context/AuthContext";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-hot-toast";
 
 const RegisterForm = () => {
   const { Register } = useAuth();
@@ -24,10 +25,19 @@ const RegisterForm = () => {
       const name = nameRef.current.value;
       const email = emailRef.current.value;
       const password = passwordRef.current.value;
+      toast.loading("Signing Up", {
+        id: "register",
+        duration: 3000,
+      });
       await Register({ name, email, password });
+      toast.success("Signed Up Successfully", {
+        id: "register",
+        duration: 3000,
+      });
       navigate("/");
     } catch (error) {
       console.error(`error is ${error}`);
+      toast.error("Signing Up Failed", { id: "register", duration: 3000 });
     }
   };
 

@@ -31,20 +31,6 @@ router.post("/", validateJWT, async (request, response) => {
   }
 });
 
-//Get All My Bookings
-router.get("/", validateJWT, async (request, response) => {
-  try {
-    const userID = response.locals.JWTData.id;
-    const bookings = await BookingModel.find({ user: userID }).populate(
-      "place"
-    );
-    response.status(200).json({ bookings });
-  } catch (error) {
-    console.log("error has taken place");
-    response.status(500).send("Something went wrong!");
-  }
-});
-
 //Get A Booking of Mine
 router.get("/:id", validateJWT, async (request, response) => {
   try {
@@ -60,6 +46,20 @@ router.get("/:id", validateJWT, async (request, response) => {
       return;
     }
     response.status(200).json({ booking });
+  } catch (error) {
+    console.log("error has taken place");
+    response.status(500).send("Something went wrong!");
+  }
+});
+
+//Get All My Bookings
+router.get("/", validateJWT, async (request, response) => {
+  try {
+    const userID = response.locals.JWTData.id;
+    const bookings = await BookingModel.find({ user: userID }).populate(
+      "place"
+    );
+    response.status(200).json({ bookings });
   } catch (error) {
     console.log("error has taken place");
     response.status(500).send("Something went wrong!");

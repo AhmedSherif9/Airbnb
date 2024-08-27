@@ -1,9 +1,13 @@
 import { Link } from "react-router-dom";
+import { useSearch } from "../../Context/SearchContext";
 
 const PlaceItem = ({ place }) => {
+  const { close } = useSearch();
+
   return (
     <article className="flex flex-col gap-1">
       <Link
+        onClick={close}
         to={`/places/${place._id}`}
         className="rounded-2xl overflow-hidden cursor-pointer"
       >
