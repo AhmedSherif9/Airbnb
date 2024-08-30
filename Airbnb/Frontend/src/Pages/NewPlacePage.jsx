@@ -1,15 +1,10 @@
 import { useEffect, useState } from "react";
-import { FaCar } from "react-icons/fa";
-import { FaRadio } from "react-icons/fa6";
-import { GiGate } from "react-icons/gi";
 import { useParams } from "react-router-dom";
-import { FaStar } from "react-icons/fa";
-import { FaRegTrashAlt } from "react-icons/fa";
-import { FaRegStar } from "react-icons/fa";
-import { MdOutlineCloudUpload } from "react-icons/md";
 import { toast } from "react-hot-toast";
 import { useForm } from "react-hook-form";
 import Input from "../Components/NewPlacePage/Input";
+import Photos from "../Components/NewPlacePage/Photos";
+import Perks from "../Components/NewPlacePage/Perks";
 
 const NewPlacePage = () => {
   const { register, handleSubmit, formState, getValues, setValue } = useForm();
@@ -54,87 +49,6 @@ const NewPlacePage = () => {
       fetchMyExistingPlace();
     }
   }, []);
-
-  const checkBoxClasses = () => {
-    return "flex items-center gap-2 p-2 border border-gray-200 rounded-2xl cursor-pointer";
-  };
-
-  const labelClasses = () => {
-    return "flex flex-col gap-1";
-  };
-
-  const inputClasses = () => {
-    return "w-full rounded-full border border-gray-200 px-3 py-1.5";
-  };
-
-  const textAreaClasses = () => {
-    return "w-full rounded-2xl border border-gray-200 px-3 py-1.5";
-  };
-
-  const errorClasses = () => {
-    return "text-error text-sm";
-  };
-
-  const UpdatePerks = (perk) => {
-    if (perks.includes(perk)) {
-      setPerks(
-        perks.filter((item) => {
-          return item !== perk;
-        })
-      );
-    } else {
-      setPerks([...perks, perk]);
-    }
-  };
-
-  const addPhotoByLink = (photo) => {
-    toast.loading("Adding Photo", { id: "link", duration: 3000 });
-    setPlacePhotos([...placePhotos, photo]);
-    setValue("photoLink", "");
-    toast.success("Photo Added Successfully", { id: "link", duration: 3000 });
-  };
-
-  const addPhotoFromDevice = async (e) => {
-    const files = e.target.files;
-    const formData = new FormData();
-
-    for (let i = 0; i < files.length; i++) {
-      formData.append("photos", files[i]);
-    }
-
-    try {
-      toast.loading("Uploading Photo", { id: "photo", duration: 3000 });
-      const response = await fetch("http://localhost:3001/uploadPhotos", {
-        method: "POST",
-        body: formData,
-        credentials: "include",
-      });
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      }
-      const data = await response.json();
-      setPlacePhotos([...placePhotos, ...data.urls]);
-      toast.success("Photo Uploaded Successfully", {
-        id: "photo",
-        duration: 3000,
-      });
-    } catch (error) {
-      console.error("Error uploading files:", error);
-      toast.error("Uploading Photo Failed", {
-        id: "photo",
-        duration: 3000,
-      });
-    }
-  };
-
-  const priorityPhoto = (photo) => {
-    const photosWithoutPhoto = placePhotos.filter((item) => item !== photo);
-    setPlacePhotos([photo, ...photosWithoutPhoto]);
-  };
-
-  const deletePhoto = (photo) => {
-    setPlacePhotos(placePhotos.filter((item) => item !== photo));
-  };
 
   const submitData = async (toastID, data, httpMethod) => {
     try {
@@ -200,330 +114,111 @@ const NewPlacePage = () => {
           "Title for your place. should be short and catchy as in advertisement"
         }
         registerName={"title"}
-        labelClasses={labelClasses}
-        inputClasses={inputClasses}
-        errorClasses={errorClasses}
         register={register}
         errors={errors}
         inputFlag={true}
+        inputType={"text"}
         required={true}
+        headersExist={true}
       />
 
       <Input
         header={"Address"}
         Subheading={"Address to this place"}
         registerName={"address"}
-        labelClasses={labelClasses}
-        inputClasses={inputClasses}
-        errorClasses={errorClasses}
         register={register}
         errors={errors}
         inputFlag={true}
+        inputType={"text"}
         required={true}
+        headersExist={true}
       />
 
-      <label className={labelClasses()}>
-        <h1 className="text-xl">Photos</h1>
-        <p className="text-sm text-gray-500">more = better</p>
-        <div className="flex items-center gap-1.5">
-          <input
-            {...register("photoLink")}
-            type="text"
-            placeholder="Add using a link ....jpg"
-            className="flex-grow rounded-full border border-gray-200 px-3 py-1.5 
-            placeholder:text-sm placeholder:font-semibold"
-          />
-          <button
-            type="button"
-            onClick={() => {
-              addPhotoByLink(getValues("photoLink"));
-            }}
-            className="bg-gray-200 rounded-xl px-3 py-2.5 text-sm font-semibold 
-          border border-gray-300"
-          >
-            Add photo
-          </button>
-        </div>
-        {placePhotos && (
-          <div className="grid grid-cols-6 gap-1.5 p-1">
-            {/* <article className="h-80 bg-red-400">yes</article> */}
-            {placePhotos.map((photo, index) => {
-              return (
-                <article
-                  key={index}
-                  className="h-30 rounded-xl overflow-hidden relative"
-                >
-                  <img
-                    src={photo}
-                    alt="photo"
-                    className="w-full h-full object-cover"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => {
-                      priorityPhoto(photo);
-                    }}
-                    className="absolute bottom-0 left-0 m-2 text-white
-                   bg-gray-950 bg-opacity-50 p-2.5 rounded-xl"
-                  >
-                    {index == 0 ? (
-                      <FaStar className="scale-110" />
-                    ) : (
-                      <FaRegStar className="scale-110" />
-                    )}
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      deletePhoto(photo);
-                    }}
-                    className="absolute bottom-0 right-0 m-2 text-white
-                   bg-gray-950 bg-opacity-50 p-2.5 rounded-xl"
-                  >
-                    <FaRegTrashAlt className="scale-110" />
-                  </button>
-                </article>
-              );
-            })}
-            {/* <article className="h-80 bg-red-400">yes</article> */}
-            <article
-              className="h-30 rounded-xl overflow-hidden 
-            flex justify-center items-center border border-gray-200"
-            >
-              <label className="flex items-center gap-2 text-gray-500 cursor-pointer">
-                <MdOutlineCloudUpload className="scale-125 text-2xl" />
-                <span className="text-xl">Upload</span>
-                <input
-                  type="file"
-                  multiple
-                  className="hidden"
-                  onChange={addPhotoFromDevice}
-                />
-              </label>
-            </article>
-          </div>
-        )}
-      </label>
+      <Photos
+        placePhotos={placePhotos}
+        setPlacePhotos={setPlacePhotos}
+        register={register}
+        getValues={getValues}
+        setValue={setValue}
+      />
 
       <Input
         header={"Description"}
         Subheading={"description of the place"}
         registerName={"description"}
-        labelClasses={labelClasses}
-        inputClasses={textAreaClasses}
-        errorClasses={errorClasses}
         register={register}
         errors={errors}
         inputFlag={false}
+        inputType={""}
         required={true}
+        headersExist={true}
       />
 
-      <div className={labelClasses()}>
-        <h1 className="text-xl">Perks</h1>
-        <p className="text-sm text-gray-500">
-          select all the perks of your place
-        </p>
-        <div className="my-1 grid grid-cols-6 gap-2">
-          <label className={checkBoxClasses()}>
-            <input
-              type="checkbox"
-              checked={perks.includes("Wifi")}
-              onChange={() => {
-                UpdatePerks("Wifi");
-              }}
-            />
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth={1.5}
-              stroke="currentColor"
-              className="w-6 h-6"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M8.288 15.038a5.25 5.25 0 017.424 0M5.106 11.856c3.807-3.808 9.98-3.808 13.788 0M1.924 8.674c5.565-5.565 14.587-5.565 20.152 0M12.53 18.22l-.53.53-.53-.53a.75.75 0 011.06 0z"
-              />
-            </svg>
-            Wifi
-          </label>
-          <label className={checkBoxClasses()}>
-            <input
-              type="checkbox"
-              checked={perks.includes("Free parking spot")}
-              onChange={() => {
-                UpdatePerks("Free parking spot");
-              }}
-            />
-            <FaCar className="scale-150" />
-            Free parking spot
-          </label>
-          <label className={checkBoxClasses()}>
-            <input
-              type="checkbox"
-              checked={perks.includes("TV")}
-              onChange={() => {
-                UpdatePerks("TV");
-              }}
-            />
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth={1.5}
-              stroke="currentColor"
-              className="w-6 h-6"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M6 20.25h12m-7.5-3v3m3-3v3m-10.125-3h17.25c.621 0 1.125-.504 1.125-1.125V4.875c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125z"
-              />
-            </svg>
-            TV
-          </label>
-          <label className={checkBoxClasses()}>
-            <input
-              type="checkbox"
-              checked={perks.includes("Radio")}
-              onChange={() => {
-                UpdatePerks("Radio");
-              }}
-            />
-            <FaRadio />
-            Radio
-          </label>
-          <label className={checkBoxClasses()}>
-            <input
-              type="checkbox"
-              checked={perks.includes("Pets")}
-              onChange={() => {
-                UpdatePerks("Pets");
-              }}
-            />
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth="1.5"
-              stroke="currentColor"
-              className="w-6 h-6"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M6.633 10.5c.806 0 1.533-.446 2.031-1.08a9.041 9.041 0 012.861-2.4c.723-.384 1.35-.956 1.653-1.715a4.498 4.498 0 00.322-1.672V3a.75.75 0 01.75-.75A2.25 2.25 0 0116.5 4.5c0 1.152-.26 2.243-.723 3.218-.266.558.107 1.282.725 1.282h3.126c1.026 0 1.945.694 2.054 1.715.045.422.068.85.068 1.285a11.95 11.95 0 01-2.649 7.521c-.388.482-.987.729-1.605.729H13.48c-.483 0-.964-.078-1.423-.23l-3.114-1.04a4.501 4.501 0 00-1.423-.23H5.904M14.25 9h2.25M5.904 18.75c.083.205.173.405.27.602.197.4-.078.898-.523.898h-.908c-.889 0-1.713-.518-1.972-1.368a12 12 0 01-.521-3.507c0-1.553.295-3.036.831-4.398C3.387 10.203 4.167 9.75 5 9.75h1.053c.472 0 .745.556.5.96a8.958 8.958 0 00-1.302 4.665c0 1.194.232 2.333.654 3.375z"
-              />
-            </svg>
-            Pets
-          </label>
-          <label className={checkBoxClasses()}>
-            <input
-              type="checkbox"
-              checked={perks.includes("Private entrance")}
-              onChange={() => {
-                UpdatePerks("Private entrance");
-              }}
-            />
-            <GiGate className="scale-150" />
-            Private entrance
-          </label>
-        </div>
-      </div>
+      <Perks perks={perks} setPerks={setPerks} />
 
       <Input
         header={"Extra Info"}
         Subheading={"house rules, etc"}
         registerName={"extraInfo"}
-        labelClasses={labelClasses}
-        inputClasses={textAreaClasses}
-        errorClasses={errorClasses}
         register={register}
         errors={errors}
         inputFlag={false}
+        inputType={""}
         required={false}
+        headersExist={true}
       />
 
-      <div className={labelClasses()}>
+      <div className="flex flex-col gap-1">
         <h1 className="text-xl">Check in & out times</h1>
         <p className="text-sm text-gray-500">
           add check in & out times, remember to have some time window for
           cleaning the room between guests
         </p>
         <div className="my-1 grid grid-cols-4 gap-2">
-          <div className=" flex flex-col gap-0.5">
-            <label className={labelClasses()}>
-              Check in time
-              <input
-                {...register("checkIn", {
-                  required: {
-                    value: true,
-                    message: "check in time is required",
-                  },
-                })}
-                type="number"
-                className={inputClasses()}
-              />
-            </label>
-            <p className={errorClasses()}>
-              {errors.checkIn ? `*${errors.checkIn.message}` : ""}
-            </p>
-          </div>
-          <div className=" flex flex-col gap-0.5">
-            <label className={labelClasses()}>
-              Check out time
-              <input
-                {...register("checkOut", {
-                  required: {
-                    value: true,
-                    message: "check out time is required",
-                  },
-                })}
-                type="number"
-                className={inputClasses()}
-              />
-            </label>
-            <p className={errorClasses()}>
-              {errors.checkOut ? `*${errors.checkOut.message}` : ""}
-            </p>
-          </div>
-          <div className=" flex flex-col gap-0.5">
-            <label className={labelClasses()}>
-              Max. number of guests
-              <input
-                {...register("maxGuests", {
-                  required: {
-                    value: true,
-                    message: "max. no. of guests is required",
-                  },
-                })}
-                type="number"
-                className={inputClasses()}
-              />
-            </label>
-            <p className={errorClasses()}>
-              {errors.maxGuests ? `*${errors.maxGuests.message}` : ""}
-            </p>
-          </div>
-          <div className=" flex flex-col gap-0.5">
-            <label className={labelClasses()}>
-              Price per night
-              <input
-                {...register("price", {
-                  required: {
-                    value: true,
-                    message: "price is required",
-                  },
-                })}
-                type="number"
-                className={inputClasses()}
-              />
-            </label>
-            <p className={errorClasses()}>
-              {errors.price ? `*${errors.price.message}` : ""}
-            </p>
-          </div>
+          <Input
+            header={"Check in time"}
+            Subheading={""}
+            registerName={"checkIn"}
+            register={register}
+            errors={errors}
+            inputFlag={true}
+            inputType={"number"}
+            required={true}
+            headersExist={false}
+          />
+          <Input
+            header={"Check out time"}
+            Subheading={""}
+            registerName={"checkOut"}
+            register={register}
+            errors={errors}
+            inputFlag={true}
+            inputType={"number"}
+            required={true}
+            headersExist={false}
+          />
+          <Input
+            header={"Max. number of guests"}
+            Subheading={""}
+            registerName={"maxGuests"}
+            register={register}
+            errors={errors}
+            inputFlag={true}
+            inputType={"number"}
+            required={true}
+            headersExist={false}
+          />
+          <Input
+            header={"Price per night"}
+            Subheading={""}
+            registerName={"price"}
+            register={register}
+            errors={errors}
+            inputFlag={true}
+            inputType={"number"}
+            required={true}
+            headersExist={false}
+          />
         </div>
       </div>
 

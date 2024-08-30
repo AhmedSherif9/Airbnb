@@ -2,19 +2,40 @@ const Input = ({
   header,
   Subheading,
   registerName,
-  labelClasses,
-  inputClasses,
-  errorClasses,
   register,
   errors,
   inputFlag,
+  inputType,
   required,
+  headersExist,
 }) => {
+  const labelClasses = () => {
+    return "flex flex-col gap-1";
+  };
+
+  const inputClasses = () => {
+    return "w-full rounded-full border border-gray-200 px-3 py-1.5";
+  };
+
+  const textAreaClasses = () => {
+    return "w-full rounded-2xl border border-gray-200 px-3 py-1.5";
+  };
+
+  const errorClasses = () => {
+    return "text-error text-sm";
+  };
+
   return (
     <div className="flex flex-col gap-0.5">
       <label className={labelClasses()}>
-        <h1 className="text-xl">{header}</h1>
-        <p className="text-sm text-gray-500">{Subheading}</p>
+        {headersExist ? (
+          <>
+            <h1 className="text-xl">{header}</h1>
+            <p className="text-sm text-gray-500">{Subheading}</p>
+          </>
+        ) : (
+          <span>{header}</span>
+        )}
         {inputFlag ? (
           <input
             {...register(registerName, {
@@ -23,7 +44,7 @@ const Input = ({
                 message: `${registerName} is required`,
               },
             })}
-            type="text"
+            type={inputType}
             className={inputClasses()}
           />
         ) : (
@@ -35,7 +56,7 @@ const Input = ({
               },
             })}
             rows="5"
-            className={inputClasses()}
+            className={textAreaClasses()}
           />
         )}
       </label>
