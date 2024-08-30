@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { FaCar } from "react-icons/fa";
 import { FaRadio } from "react-icons/fa6";
 import { GiGate } from "react-icons/gi";
@@ -8,51 +8,48 @@ import { FaRegTrashAlt } from "react-icons/fa";
 import { FaRegStar } from "react-icons/fa";
 import { MdOutlineCloudUpload } from "react-icons/md";
 import { toast } from "react-hot-toast";
+import { useForm } from "react-hook-form";
+import Input from "../Components/NewPlacePage/Input";
 
 const NewPlacePage = () => {
-  const titleRef = useRef();
-  const addressRef = useRef();
-  const photoRef = useRef();
-  const descriptionRef = useRef();
-  const extraInfoRef = useRef();
-  const checkInRef = useRef();
-  const checkOutRef = useRef();
-  const maxGuestsRef = useRef();
-  const priceRef = useRef();
+  const { register, handleSubmit, formState, getValues, setValue } = useForm();
+  const { errors } = formState;
 
   const [perks, setPerks] = useState([]);
   const [placePhotos, setPlacePhotos] = useState([]);
 
   const { id } = useParams();
 
-  useEffect(() => {
-    const fetchMyExistingPlace = async () => {
-      try {
-        const response = await fetch(
-          "http://localhost:3001/places/user-places/" + id,
-          {
-            credentials: "include",
-          }
-        );
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
+  const fetchMyExistingPlace = async () => {
+    try {
+      const response = await fetch(
+        "http://localhost:3001/places/user-places/" + id,
+        {
+          credentials: "include",
         }
-        const data = await response.json();
-        titleRef.current.value = data.place.title;
-        addressRef.current.value = data.place.address;
-        descriptionRef.current.value = data.place.description;
-        extraInfoRef.current.value = data.place.extraInfo;
-        checkInRef.current.value = data.place.checkIn;
-        checkOutRef.current.value = data.place.checkOut;
-        maxGuestsRef.current.value = data.place.maxGuests;
-        priceRef.current.value = data.place.price;
-
-        setPerks(data.place.perks);
-        setPlacePhotos(data.place.photos);
-      } catch (error) {
-        console.error("error is ", error);
+      );
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
       }
-    };
+      const data = await response.json();
+
+      setValue("title", data.place.title);
+      setValue("address", data.place.address);
+      setValue("description", data.place.description);
+      setValue("extraInfo", data.place.extraInfo);
+      setValue("checkIn", data.place.checkIn);
+      setValue("checkOut", data.place.checkOut);
+      setValue("maxGuests", data.place.maxGuests);
+      setValue("price", data.place.price);
+
+      setPerks(data.place.perks);
+      setPlacePhotos(data.place.photos);
+    } catch (error) {
+      console.error("error is ", error);
+    }
+  };
+
+  useEffect(() => {
     if (id != "newplace") {
       fetchMyExistingPlace();
     }
@@ -74,6 +71,10 @@ const NewPlacePage = () => {
     return "w-full rounded-2xl border border-gray-200 px-3 py-1.5";
   };
 
+  const errorClasses = () => {
+    return "text-error text-sm";
+  };
+
   const UpdatePerks = (perk) => {
     if (perks.includes(perk)) {
       setPerks(
@@ -89,7 +90,7 @@ const NewPlacePage = () => {
   const addPhotoByLink = (photo) => {
     toast.loading("Adding Photo", { id: "link", duration: 3000 });
     setPlacePhotos([...placePhotos, photo]);
-    photoRef.current.value = "";
+    setValue("photoLink", "");
     toast.success("Photo Added Successfully", { id: "link", duration: 3000 });
   };
 
@@ -135,104 +136,98 @@ const NewPlacePage = () => {
     setPlacePhotos(placePhotos.filter((item) => item !== photo));
   };
 
-  const submit = async (e) => {
-    e.preventDefault();
-    const FormData = {
-      title: titleRef.current.value,
-      address: addressRef.current.value,
-      photos: placePhotos,
-      description: descriptionRef.current.value,
-      perks,
-      extraInfo: extraInfoRef.current.value,
-      checkIn: checkInRef.current.value,
-      checkOut: checkOutRef.current.value,
-      maxGuests: maxGuestsRef.current.value,
-      price: priceRef.current.value,
-    };
+  const submitData = async (toastID, data, httpMethod) => {
+    try {
+      toast.loading(
+        `${httpMethod == "PUT" ? "editing" : "adding"} ${getValues("title")}`,
+        {
+          id: toastID,
+          duration: 3000,
+        }
+      );
+      const response = await fetch("http://localhost:3001/places/" + id, {
+        method: httpMethod,
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+        credentials: "include",
+      });
+      if (response.status != 201) {
+        throw new Error("Network response was not ok");
+      }
+      toast.success(
+        `${getValues("title")} ${
+          httpMethod == "PUT" ? "edited" : "added"
+        } Successfully`,
+        {
+          id: toastID,
+          duration: 3000,
+        }
+      );
+    } catch (error) {
+      console.error("error is", error);
+      toast.error(
+        `${httpMethod == "PUT" ? "editing" : "adding"} ${getValues(
+          "title"
+        )} Failed`,
+        {
+          id: toastID,
+          duration: 3000,
+        }
+      );
+    }
+  };
+
+  const submit = async (data) => {
+    data.photos = placePhotos;
+    data.perks = perks;
     if (id != "newplace") {
-      try {
-        toast.loading(`Editing ${titleRef.current.value}`, {
-          id: "edit",
-          duration: 3000,
-        });
-        const response = await fetch("http://localhost:3001/places/" + id, {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(FormData),
-          credentials: "include",
-        });
-        if (response.status != 201) {
-          throw new Error("Network response was not ok");
-        }
-        toast.success(`${titleRef.current.value} Edited Successfully`, {
-          id: "edit",
-          duration: 3000,
-        });
-      } catch (error) {
-        console.error("error is", error);
-        toast.error(`Editing ${titleRef.current.value} Failed`, {
-          id: "edit",
-          duration: 3000,
-        });
-      }
+      await submitData("edit", data, "PUT");
     } else {
-      try {
-        toast.loading(`Adding ${titleRef.current.value}`, {
-          id: "add",
-          duration: 3000,
-        });
-        const response = await fetch("http://localhost:3001/places/", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(FormData),
-          credentials: "include",
-        });
-        if (response.status != 201) {
-          throw new Error("Network response was not ok");
-        }
-        toast.success(`${titleRef.current.value} Added Successfully`, {
-          id: "add",
-          duration: 3000,
-        });
-      } catch (error) {
-        console.error("error is", error);
-        toast.error(`Adding ${titleRef.current.value} Failed`, {
-          id: "add",
-          duration: 3000,
-        });
-      }
+      await submitData("add", data, "POST");
     }
   };
 
   return (
     <form
-      onSubmit={submit}
+      onSubmit={handleSubmit(submit)}
       className="font-semibold flex flex-col gap-3.5 mb-3.5"
     >
-      <label className={labelClasses()}>
-        <h1 className="text-xl">Title</h1>
-        <p className="text-sm text-gray-500">
-          Title for your place. should be short and catchy as in advertisement
-        </p>
-        <input ref={titleRef} type="text" className={inputClasses()} />
-      </label>
+      <Input
+        header={"Title"}
+        Subheading={
+          "Title for your place. should be short and catchy as in advertisement"
+        }
+        registerName={"title"}
+        labelClasses={labelClasses}
+        inputClasses={inputClasses}
+        errorClasses={errorClasses}
+        register={register}
+        errors={errors}
+        inputFlag={true}
+        required={true}
+      />
 
-      <label className={labelClasses()}>
-        <h1 className="text-xl">Address</h1>
-        <p className="text-sm text-gray-500">Address to this place</p>
-        <input ref={addressRef} type="text" className={inputClasses()} />
-      </label>
+      <Input
+        header={"Address"}
+        Subheading={"Address to this place"}
+        registerName={"address"}
+        labelClasses={labelClasses}
+        inputClasses={inputClasses}
+        errorClasses={errorClasses}
+        register={register}
+        errors={errors}
+        inputFlag={true}
+        required={true}
+      />
 
       <label className={labelClasses()}>
         <h1 className="text-xl">Photos</h1>
         <p className="text-sm text-gray-500">more = better</p>
         <div className="flex items-center gap-1.5">
           <input
-            ref={photoRef}
+            {...register("photoLink")}
             type="text"
             placeholder="Add using a link ....jpg"
             className="flex-grow rounded-full border border-gray-200 px-3 py-1.5 
@@ -241,7 +236,7 @@ const NewPlacePage = () => {
           <button
             type="button"
             onClick={() => {
-              addPhotoByLink(photoRef.current.value);
+              addPhotoByLink(getValues("photoLink"));
             }}
             className="bg-gray-200 rounded-xl px-3 py-2.5 text-sm font-semibold 
           border border-gray-300"
@@ -310,11 +305,18 @@ const NewPlacePage = () => {
         )}
       </label>
 
-      <label className={labelClasses()}>
-        <h1 className="text-xl">Description</h1>
-        <p className="text-sm text-gray-500">description of the place</p>
-        <textarea ref={descriptionRef} rows="5" className={textAreaClasses()} />
-      </label>
+      <Input
+        header={"Description"}
+        Subheading={"description of the place"}
+        registerName={"description"}
+        labelClasses={labelClasses}
+        inputClasses={textAreaClasses}
+        errorClasses={errorClasses}
+        register={register}
+        errors={errors}
+        inputFlag={false}
+        required={true}
+      />
 
       <div className={labelClasses()}>
         <h1 className="text-xl">Perks</h1>
@@ -430,11 +432,18 @@ const NewPlacePage = () => {
         </div>
       </div>
 
-      <label className={labelClasses()}>
-        <h1 className="text-xl">Extra Info</h1>
-        <p className="text-sm text-gray-500">house rules, etc</p>
-        <textarea ref={extraInfoRef} rows="5" className={textAreaClasses()} />
-      </label>
+      <Input
+        header={"Extra Info"}
+        Subheading={"house rules, etc"}
+        registerName={"extraInfo"}
+        labelClasses={labelClasses}
+        inputClasses={textAreaClasses}
+        errorClasses={errorClasses}
+        register={register}
+        errors={errors}
+        inputFlag={false}
+        required={false}
+      />
 
       <div className={labelClasses()}>
         <h1 className="text-xl">Check in & out times</h1>
@@ -443,26 +452,78 @@ const NewPlacePage = () => {
           cleaning the room between guests
         </p>
         <div className="my-1 grid grid-cols-4 gap-2">
-          <label className={labelClasses()}>
-            Check in time
-            <input ref={checkInRef} type="number" className={inputClasses()} />
-          </label>
-          <label className={labelClasses()}>
-            Check out time
-            <input ref={checkOutRef} type="number" className={inputClasses()} />
-          </label>
-          <label className={labelClasses()}>
-            Max number of guests
-            <input
-              ref={maxGuestsRef}
-              type="number"
-              className={inputClasses()}
-            />
-          </label>
-          <label className={labelClasses()}>
-            Price per night
-            <input ref={priceRef} type="number" className={inputClasses()} />
-          </label>
+          <div className=" flex flex-col gap-0.5">
+            <label className={labelClasses()}>
+              Check in time
+              <input
+                {...register("checkIn", {
+                  required: {
+                    value: true,
+                    message: "check in time is required",
+                  },
+                })}
+                type="number"
+                className={inputClasses()}
+              />
+            </label>
+            <p className={errorClasses()}>
+              {errors.checkIn ? `*${errors.checkIn.message}` : ""}
+            </p>
+          </div>
+          <div className=" flex flex-col gap-0.5">
+            <label className={labelClasses()}>
+              Check out time
+              <input
+                {...register("checkOut", {
+                  required: {
+                    value: true,
+                    message: "check out time is required",
+                  },
+                })}
+                type="number"
+                className={inputClasses()}
+              />
+            </label>
+            <p className={errorClasses()}>
+              {errors.checkOut ? `*${errors.checkOut.message}` : ""}
+            </p>
+          </div>
+          <div className=" flex flex-col gap-0.5">
+            <label className={labelClasses()}>
+              Max. number of guests
+              <input
+                {...register("maxGuests", {
+                  required: {
+                    value: true,
+                    message: "max. no. of guests is required",
+                  },
+                })}
+                type="number"
+                className={inputClasses()}
+              />
+            </label>
+            <p className={errorClasses()}>
+              {errors.maxGuests ? `*${errors.maxGuests.message}` : ""}
+            </p>
+          </div>
+          <div className=" flex flex-col gap-0.5">
+            <label className={labelClasses()}>
+              Price per night
+              <input
+                {...register("price", {
+                  required: {
+                    value: true,
+                    message: "price is required",
+                  },
+                })}
+                type="number"
+                className={inputClasses()}
+              />
+            </label>
+            <p className={errorClasses()}>
+              {errors.price ? `*${errors.price.message}` : ""}
+            </p>
+          </div>
         </div>
       </div>
 

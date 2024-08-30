@@ -23,7 +23,7 @@ const LoginForm = () => {
       navigate("/");
     } catch (error) {
       console.error(`error is ${error}`);
-      toast.error(`${error}`, { id: "login", duration: 3000 });
+      toast.error(`${error.message}`, { id: "login", duration: 3000 });
     }
   };
 
@@ -126,10 +126,7 @@ const LoginForm = () => {
             },
           }}
         />
-        <button
-          type="submit"
-          className="rounded-xl w-full px-4 py-1.5 bg-primary text-white font-semibold"
-        >
+        <button className="rounded-xl w-full px-4 py-1.5 bg-primary text-white font-semibold">
           Login
         </button>
       </form>

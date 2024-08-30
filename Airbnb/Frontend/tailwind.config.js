@@ -5,6 +5,7 @@ export default {
     extend: {
       colors: {
         primary: "#F5385D",
+        error: "#d32f2f",
       },
       height: {
         30: "7.5rem",

@@ -54,7 +54,8 @@ export const AuthProvider = ({ children }) => {
       credentials: "include",
     });
     if (response.status !== 201) {
-      throw new Error("Registeration Failed");
+      const errorMessage = await response.text();
+      throw new Error(errorMessage);
     }
     const data = await response.json();
     setUser(data);

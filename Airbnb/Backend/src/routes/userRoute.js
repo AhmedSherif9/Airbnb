@@ -11,7 +11,7 @@ router.post("/register", async (request, response) => {
     const { name, email, password } = request.body;
     const UserFound = await UserModel.findOne({ email });
     if (UserFound) {
-      response.status(500).send("User already registered!!");
+      response.status(500).send("User already registered");
       return;
     }
     const hashedPassword = await bcrypt.hash(password, 10);
