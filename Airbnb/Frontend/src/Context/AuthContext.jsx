@@ -36,7 +36,8 @@ export const AuthProvider = ({ children }) => {
       credentials: "include",
     });
     if (!response.ok) {
-      throw new Error("Log in Failed");
+      const errorMessage = await response.text();
+      throw new Error(errorMessage);
     }
     const data = await response.json();
     setUser(data);

@@ -38,12 +38,12 @@ router.post("/login", async (request, response) => {
     const { email, password } = request.body;
     const userFound = await UserModel.findOne({ email });
     if (!userFound) {
-      response.status(404).send("User Not Found!!");
+      response.status(404).send("email is incorrect");
       return;
     }
     const isPasswordMatch = await bcrypt.compare(password, userFound.password);
     if (!isPasswordMatch) {
-      response.status(404).send("password is incorrect!!");
+      response.status(404).send("password is incorrect");
       return;
     }
     const token = jwt.sign({ id: userFound._id }, process.env.SECRET_KEY);
