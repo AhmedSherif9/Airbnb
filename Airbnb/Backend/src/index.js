@@ -6,7 +6,7 @@ import placeRouter from "./routes/placeRoute.js";
 import bookingRouter from "./routes/bookingRoute.js";
 import cors from "cors";
 import cookieParser from "cookie-parser";
-import uploadRouter from "./routes/uploadRoute.js";
+import filesRouter from "./routes/filesRoute.js";
 
 dotenv.config();
 
@@ -30,7 +30,7 @@ mongoose
 app.use("/user", userRouter);
 app.use("/places", placeRouter);
 app.use("/bookings", bookingRouter);
-app.use("/files", uploadRouter);
+app.use("/files", filesRouter);
 
 app.listen(port, () => {
   console.log(`Server is running at: http://localhost:${port}`);

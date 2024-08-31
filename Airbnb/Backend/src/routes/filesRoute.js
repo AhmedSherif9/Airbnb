@@ -1,6 +1,12 @@
 import express from "express";
 import { initializeApp } from "firebase/app";
-import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import {
+  getStorage,
+  ref,
+  uploadBytes,
+  getDownloadURL,
+  deleteObject,
+} from "firebase/storage";
 import multer from "multer";
 import firebaseConfig from "../config/firebase.config.js";
 
@@ -49,6 +55,33 @@ router.post("/upload", upload.array("files"), async (req, res) => {
   } catch (error) {
     console.error("Error uploading file:", error);
     return res.status(400).send(error.message);
+  }
+});
+
+router.delete("/delete", async (req, res) => {
+  const { photo } = req.body;
+
+  if (!photo) {
+    return res.status(400).send("No file URL provided.");
+  }
+
+  try {
+    // Extract the path part from the URL
+    const pathStartIndex = photo.indexOf("/o/") + 3; // Start after "/o/"
+    const pathEndIndex = photo.indexOf("?"); // End before "?"
+    const encodedPath = photo.substring(pathStartIndex, pathEndIndex);
+    // Decode the path to handle URL-encoded characters
+    const filePath = decodeURIComponent(encodedPath);
+
+    const fileRef = ref(storage, filePath);
+
+    await deleteObject(fileRef);
+
+    return res
+      .status(204)
+      .send("File deleted successfully from Firebase Storage");
+  } catch (error) {
+    return res.status(500).send(error.message);
   }
 });
 

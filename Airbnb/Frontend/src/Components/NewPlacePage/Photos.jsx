@@ -59,7 +59,24 @@ const Photos = ({
     setPlacePhotos([photo, ...photosWithoutPhoto]);
   };
 
-  const deletePhoto = (photo) => {
+  const deletePhoto = async (photo) => {
+    if (photo.startsWith("https://firebasestorage.googleapis.com")) {
+      try {
+        const response = await fetch("http://localhost:3001/files/delete", {
+          method: "DELETE",
+          body: JSON.stringify({ photo }),
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+        });
+        if (response.status != 204) {
+          throw new Error("Network response was not ok");
+        }
+      } catch (error) {
+        console.error("Error uploading files:", error);
+      }
+    }
     setPlacePhotos(placePhotos.filter((item) => item !== photo));
   };
 
