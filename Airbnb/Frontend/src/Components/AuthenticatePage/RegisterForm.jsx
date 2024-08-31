@@ -16,7 +16,7 @@ const RegisterForm = () => {
     try {
       toast.loading("Signing Up", {
         id: "register",
-        duration: 3000,
+        duration: 9000,
       });
       await Register(data);
       toast.success("Signed Up Successfully", {

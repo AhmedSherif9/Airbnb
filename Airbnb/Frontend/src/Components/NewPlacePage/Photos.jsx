@@ -16,23 +16,20 @@ const Photos = ({
   };
 
   const addPhotoByLink = (photo) => {
-    toast.loading("Adding Photo", { id: "link", duration: 3000 });
+    toast.loading("Adding Photo", { id: "link", duration: 9000 });
     setPlacePhotos([...placePhotos, photo]);
     setValue("photoLink", "");
     toast.success("Photo Added Successfully", { id: "link", duration: 3000 });
   };
 
   const addPhotoFromDevice = async (e) => {
-    const files = e.target.files;
+    const file = e.target.files[0];
     const formData = new FormData();
-
-    for (let i = 0; i < files.length; i++) {
-      formData.append("photos", files[i]);
-    }
+    formData.append("file", file);
 
     try {
-      toast.loading("Uploading Photo", { id: "photo", duration: 3000 });
-      const response = await fetch("http://localhost:3001/uploadPhotos", {
+      toast.loading("Uploading Photo", { id: "photo", duration: 9000 });
+      const response = await fetch("http://localhost:3001/upload", {
         method: "POST",
         body: formData,
         credentials: "include",
@@ -41,7 +38,7 @@ const Photos = ({
         throw new Error("Network response was not ok");
       }
       const data = await response.json();
-      setPlacePhotos([...placePhotos, ...data.urls]);
+      setPlacePhotos([...placePhotos, data.downloadURL]);
       toast.success("Photo Uploaded Successfully", {
         id: "photo",
         duration: 3000,
@@ -141,7 +138,6 @@ const Photos = ({
               <span className="text-xl">Upload</span>
               <input
                 type="file"
-                multiple
                 className="hidden"
                 onChange={addPhotoFromDevice}
               />

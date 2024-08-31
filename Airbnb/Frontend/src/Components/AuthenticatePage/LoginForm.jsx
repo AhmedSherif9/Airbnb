@@ -16,7 +16,7 @@ const LoginForm = () => {
     try {
       toast.loading("Logging In", {
         id: "login",
-        duration: 3000,
+        duration: 9000,
       });
       await Login(data);
       toast.success("Logged In Successfully", { id: "login", duration: 3000 });

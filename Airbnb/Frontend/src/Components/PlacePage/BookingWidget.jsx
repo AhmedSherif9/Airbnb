@@ -1,6 +1,9 @@
 const BookingWidget = ({ place }) => {
   return (
-    <article className="bg-gray-300 flex flex-col gap-3 rounded-2xl py-4 px-1.5">
+    <article
+      className="bg-gray-300 flex flex-col gap-3 rounded-2xl py-4 px-1.5 
+      shadow-lg shadow-gray-400"
+    >
       <div className="text-xl font-semibold mx-auto text-black">
         {`Price: $${place?.price} ${"/"} per night`}
       </div>

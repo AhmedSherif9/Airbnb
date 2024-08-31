@@ -6,10 +6,7 @@ import placeRouter from "./routes/placeRoute.js";
 import bookingRouter from "./routes/bookingRoute.js";
 import cors from "cors";
 import cookieParser from "cookie-parser";
-import multer from "multer";
-import fs from "fs";
-import path from "path";
-import validateJWT from "./middlewares/validateJWT.js";
+import uploadRouter from "./routes/uploadRoute.js";
 
 dotenv.config();
 
@@ -33,31 +30,7 @@ mongoose
 app.use("/user", userRouter);
 app.use("/places", placeRouter);
 app.use("/bookings", bookingRouter);
-
-const uploadsFolderPath = path.join(process.cwd(), "uploads/");
-if (!fs.existsSync(uploadsFolderPath)) {
-  fs.mkdirSync(uploadsFolderPath, { recursive: true });
-}
-const upload = multer({ dest: uploadsFolderPath });
-app.post(
-  "/uploadPhotos",
-  validateJWT,
-  upload.array("photos", 10),
-  (req, res) => {
-    const urls = req.files.map((file) => {
-      const filePath = path.join(uploadsFolderPath, file.filename);
-      const fileData = fs.readFileSync(filePath);
-      const dataUrl = `data:${file.mimetype};base64,${fileData.toString(
-        "base64"
-      )}`;
-
-      fs.unlinkSync(filePath);
-      return dataUrl;
-    });
-    66;
-    res.status(200).json({ urls });
-  }
-);
+app.use("/upload", uploadRouter);
 
 app.listen(port, () => {
   console.log(`Server is running at: http://localhost:${port}`);

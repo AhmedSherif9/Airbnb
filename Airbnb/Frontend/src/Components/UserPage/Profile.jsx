@@ -8,7 +8,7 @@ const Profile = () => {
 
   const getOut = async () => {
     try {
-      toast.loading("Logging Out", { id: "logout", duration: 3000 });
+      toast.loading("Logging Out", { id: "logout", duration: 9000 });
       await Logout();
       toast.success("Logged Out Successfully", {
         id: "logout",

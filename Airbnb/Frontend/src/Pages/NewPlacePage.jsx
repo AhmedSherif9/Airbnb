@@ -56,7 +56,7 @@ const NewPlacePage = () => {
         `${httpMethod == "PUT" ? "editing" : "adding"} ${getValues("title")}`,
         {
           id: toastID,
-          duration: 3000,
+          duration: 9000,
         }
       );
       const response = await fetch("http://localhost:3001/places/" + id, {
