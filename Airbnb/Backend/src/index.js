@@ -30,7 +30,7 @@ mongoose
 app.use("/user", userRouter);
 app.use("/places", placeRouter);
 app.use("/bookings", bookingRouter);
-app.use("/upload", uploadRouter);
+app.use("/files", uploadRouter);
 
 app.listen(port, () => {
   console.log(`Server is running at: http://localhost:${port}`);

@@ -15,36 +15,37 @@ const storage = getStorage(app);
 // multer.memoryStorage() stores the uploaded files in memory
 const upload = multer({ storage: multer.memoryStorage() });
 
-router.post("/", upload.single("file"), async (req, res) => {
-  if (!req.file) {
-    return res.status(400).send("No file uploaded.");
+router.post("/upload", upload.array("files"), async (req, res) => {
+  if (!req.files || req.files.length === 0) {
+    return res.status(400).send("No files uploaded.");
   }
 
   try {
-    //Creates a reference to the file location in storage
-    const fileLocation = ref(storage, `files/${req.file.originalname}`);
+    const filesURLS = [];
 
-    //includes info about the file format
-    const metadata = {
-      contentType: req.file.mimetype,
-    };
+    for (const file of req.files) {
+      //Creates a reference to the file location in storage
+      const fileLocation = ref(storage, `files/${file.originalname}`);
 
-    //Uploads the file to its location in storage
-    const snapshot = await uploadBytes(
-      fileLocation,
-      req.file.buffer, //req.file.buffer contains the file data.
-      metadata
-    );
+      //includes info about the file format
+      const metadata = {
+        contentType: file.mimetype,
+      };
 
-    //Gets the download URL of the uploaded file
-    const downloadURL = await getDownloadURL(snapshot.ref);
+      //Uploads the file to its location in storage
+      const snapshot = await uploadBytes(
+        fileLocation,
+        file.buffer, //file.buffer contains the file data.
+        metadata
+      );
 
-    res.status(201).json({
-      message: "File uploaded to Firebase Storage",
-      name: req.file.originalname,
-      type: req.file.mimetype,
-      downloadURL,
-    });
+      //Gets the download URL of the uploaded file
+      const downloadURL = await getDownloadURL(snapshot.ref);
+
+      filesURLS.push(downloadURL);
+    }
+
+    res.status(201).json({ filesURLS });
   } catch (error) {
     console.error("Error uploading file:", error);
     return res.status(400).send(error.message);
