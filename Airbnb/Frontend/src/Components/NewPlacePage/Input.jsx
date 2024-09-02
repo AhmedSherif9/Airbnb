@@ -45,6 +45,12 @@ const Input = ({
               },
             })}
             type={inputType}
+            {...(inputType === "number" &&
+              header.includes("Check") && { min: "1", max: "24" })}
+            {...(inputType === "number" &&
+              (header.includes("Price") || header.includes("guests")) && {
+                min: "0",
+              })}
             className={inputClasses()}
           />
         ) : (

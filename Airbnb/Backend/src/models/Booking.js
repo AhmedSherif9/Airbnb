@@ -5,8 +5,8 @@ const BookingSchema = new Schema({
   user: { type: Schema.Types.ObjectId, required: true, ref: "User" },
   name: { type: String, required: true },
   phone: { type: String, required: true },
-  checkIn: { type: Number, required: true },
-  checkOut: { type: Number, required: true },
+  checkIn: { type: Date, required: true },
+  checkOut: { type: Date, required: true },
   price: Number,
 });
 
