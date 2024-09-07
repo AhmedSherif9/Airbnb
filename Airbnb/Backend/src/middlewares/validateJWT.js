@@ -3,7 +3,7 @@ import jwt from "jsonwebtoken";
 const validateJWT = (request, response, next) => {
   const { token } = request.signedCookies;
   if (!token) {
-    response.status(500).send("Not Authenticated!");
+    response.status(500).send("Not Logged In");
     return;
   }
   jwt.verify(token, process.env.SECRET_KEY, async (err, payload) => {

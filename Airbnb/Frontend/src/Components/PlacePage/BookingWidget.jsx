@@ -9,13 +9,38 @@ const BookingWidget = ({ place }) => {
     return "text-error text-xs";
   };
 
+  // const disabledDates = [new Date("2024-09-07"), new Date("2024-09-10")];
+
+  // const isDisabledDate = (date) => {
+  //   return disabledDates.some((disabledDate) => {
+  //     return (
+  //       disabledDate.getFullYear() === date.getFullYear() &&
+  //       disabledDate.getMonth() === date.getMonth() &&
+  //       disabledDate.getDate() === date.getDate()
+  //     );
+  //   });
+  // };
+
   const submit = async (data) => {
     data.place = place?._id;
+    //console log 1
     try {
       toast.loading("Booking The Place", {
         id: "booking",
         duration: 9000,
       });
+      const checkOut = new Date(getValues("checkOut"));
+      const checkIn = new Date(getValues("checkIn"));
+      if (checkOut < checkIn) {
+        throw new Error("Check-out must be after Check-in");
+      }
+      const differenceInMs = checkOut - checkIn;
+      const differenceInDays = differenceInMs / (1000 * 3600 * 24);
+      if (differenceInDays < 2) {
+        throw new Error("At least 2 nights to be reserved");
+      }
+      const price = differenceInDays * place?.price;
+      data.price = price;
       const response = await fetch("http://localhost:3001/bookings", {
         method: "POST",
         headers: {
@@ -28,6 +53,7 @@ const BookingWidget = ({ place }) => {
         const errorMessage = await response.text();
         throw new Error(errorMessage);
       }
+      //console log 2
       toast.success("Place Is Booked Successfully", {
         id: "booking",
         duration: 3000,

@@ -8,26 +8,22 @@ const router = express.Router();
 //Create A Booking
 router.post("/", validateJWT, async (request, response) => {
   try {
-    const userID = response.locals.JWTData.id;
-    const { place, checkIn, checkOut, noOfGuests } = request.body;
+    const user = response.locals.JWTData.id;
+    const { place, checkIn, checkOut, noOfGuests, price } = request.body;
     const placeFound = await PlaceModel.findById(place);
     if (!placeFound) {
       response.status(404).send("Place is Not Found");
       return;
     }
-    if (checkOut < checkIn) {
-      response.status(400).send("check-out is before check-in");
-      return;
-    }
     const newBooking = await BookingModel.create({
       place,
-      user: userID,
+      user,
       checkIn,
       checkOut,
       noOfGuests,
-      price: 100,
+      price,
     });
-    response.status(201).json({ booking: newBooking });
+    response.status(201).json({ newBooking });
   } catch (error) {
     console.log("error has taken place");
     response.status(500).send("Something went wrong!");
