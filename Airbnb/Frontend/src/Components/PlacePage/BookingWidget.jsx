@@ -1,6 +1,46 @@
+import { toast } from "react-hot-toast";
+import { useForm } from "react-hook-form";
+
 const BookingWidget = ({ place }) => {
+  const { register, handleSubmit, formState, getValues } = useForm();
+  const { errors } = formState;
+
+  const errorClasses = () => {
+    return "text-error text-xs";
+  };
+
+  const submit = async (data) => {
+    data.place = place?._id;
+    try {
+      toast.loading("Booking The Place", {
+        id: "booking",
+        duration: 9000,
+      });
+      const response = await fetch("http://localhost:3001/bookings", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+        credentials: "include",
+      });
+      if (response.status != 201) {
+        const errorMessage = await response.text();
+        throw new Error(errorMessage);
+      }
+      toast.success("Place Is Booked Successfully", {
+        id: "booking",
+        duration: 3000,
+      });
+    } catch (error) {
+      console.error(`error is ${error}`);
+      toast.error(`${error.message}`, { id: "booking", duration: 3000 });
+    }
+  };
+
   return (
-    <article
+    <form
+      onSubmit={handleSubmit(submit)}
       className="bg-gray-300 flex flex-col gap-3 rounded-2xl py-4 px-1.5 
       shadow-lg shadow-gray-400"
     >
@@ -8,31 +48,71 @@ const BookingWidget = ({ place }) => {
         {`Price: $${place?.price} ${"/"} per night`}
       </div>
 
-      <div className="w-11/12 grid grid-rows-2 mx-auto text-black gap-2">
-        <div className="grid grid-cols-2 gap-2">
-          <label>
+      <div className="w-11/12 mx-auto flex flex-col gap-2 text-black">
+        <div className="flex justify-between">
+          <label className="flex flex-col w-32">
             Check-in:
-            <input type="date" className="rounded-md" />
+            <input
+              type="date"
+              {...register("checkIn", {
+                required: {
+                  value: true,
+                  message: "check-in is required",
+                },
+              })}
+              className="p-1 rounded-md"
+            />
+            <p className={errorClasses()}>
+              {errors.checkIn ? `*${errors.checkIn?.message}` : ""}
+            </p>
           </label>
 
-          <label>
+          <label className="flex flex-col w-32">
             Check-out:
-            <input type="date" className="rounded-md" />
+            <input
+              type="date"
+              {...register("checkOut", {
+                required: {
+                  value: true,
+                  message: "check-out is required",
+                },
+              })}
+              className="p-1 rounded-md"
+            />
+            <p className={errorClasses()}>
+              {errors.checkOut ? `*${errors.checkOut?.message}` : ""}
+            </p>
           </label>
         </div>
-        <label>
+        <label className="flex flex-col w-full">
           Number of guests:
-          <input type="number" className="w-full py-0.5 rounded-lg" />
+          <input
+            type="number"
+            {...register("noOfGuests", {
+              min: {
+                value: 0,
+                message: "number of guests has to be greater than or equal 0",
+              },
+              max: {
+                value: place?.maxGuests,
+                message: `number of guests has to be less than or equal ${place?.maxGuests}`,
+              },
+            })}
+            className="p-1 rounded-lg"
+          />
+          <p className={errorClasses()}>
+            {errors.noOfGuests ? `*${errors.noOfGuests?.message}` : ""}
+          </p>
         </label>
       </div>
 
       <button
-        className="w-11/12 px-4 py-1.5 bg-primary mx-auto
-   rounded-xl text-white font-semibold"
+        className="w-11/12 mx-auto px-4 py-1.5 bg-primary rounded-xl
+       text-white font-semibold"
       >
         Book this place
       </button>
-    </article>
+    </form>
   );
 };
 
