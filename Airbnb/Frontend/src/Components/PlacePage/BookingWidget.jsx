@@ -9,18 +9,6 @@ const BookingWidget = ({ place }) => {
     return "text-error text-xs";
   };
 
-  // const disabledDates = [new Date("2024-09-07"), new Date("2024-09-10")];
-
-  // const isDisabledDate = (date) => {
-  //   return disabledDates.some((disabledDate) => {
-  //     return (
-  //       disabledDate.getFullYear() === date.getFullYear() &&
-  //       disabledDate.getMonth() === date.getMonth() &&
-  //       disabledDate.getDate() === date.getDate()
-  //     );
-  //   });
-  // };
-
   const submit = async (data) => {
     data.place = place?._id;
     //console log 1
