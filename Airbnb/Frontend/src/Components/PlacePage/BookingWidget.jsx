@@ -1,7 +1,10 @@
 import { toast } from "react-hot-toast";
 import { useForm } from "react-hook-form";
+import { useAuth } from "../../Context/AuthContext";
 
-const BookingWidget = ({ place }) => {
+const BookingWidget = ({ place, setShowModal }) => {
+  const { isAuthenticated } = useAuth();
+
   const { register, handleSubmit, formState, getValues } = useForm();
   const { errors } = formState;
 
@@ -54,7 +57,7 @@ const BookingWidget = ({ place }) => {
 
   return (
     <form
-      onSubmit={handleSubmit(submit)}
+      onSubmit={handleSubmit(isAuthenticated && submit)}
       className="bg-gray-300 flex flex-col gap-3 rounded-2xl py-4 px-1.5 
       shadow-lg shadow-gray-400"
     >
@@ -77,7 +80,9 @@ const BookingWidget = ({ place }) => {
               className="p-1 rounded-md"
             />
             <p className={errorClasses()}>
-              {errors.checkIn ? `*${errors.checkIn?.message}` : ""}
+              {isAuthenticated && errors.checkIn
+                ? `*${errors.checkIn?.message}`
+                : ""}
             </p>
           </label>
 
@@ -94,7 +99,9 @@ const BookingWidget = ({ place }) => {
               className="p-1 rounded-md"
             />
             <p className={errorClasses()}>
-              {errors.checkOut ? `*${errors.checkOut?.message}` : ""}
+              {isAuthenticated && errors.checkOut
+                ? `*${errors.checkOut?.message}`
+                : ""}
             </p>
           </label>
         </div>
@@ -115,12 +122,15 @@ const BookingWidget = ({ place }) => {
             className="p-1 rounded-lg"
           />
           <p className={errorClasses()}>
-            {errors.noOfGuests ? `*${errors.noOfGuests?.message}` : ""}
+            {isAuthenticated && errors.noOfGuests
+              ? `*${errors.noOfGuests?.message}`
+              : ""}
           </p>
         </label>
       </div>
 
       <button
+        onClick={() => !isAuthenticated && setShowModal(true)}
         className="w-11/12 mx-auto px-4 py-1.5 bg-primary rounded-xl
        text-white font-semibold"
       >

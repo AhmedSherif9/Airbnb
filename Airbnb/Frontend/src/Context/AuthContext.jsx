@@ -5,6 +5,7 @@ const AuthContext = createContext(null);
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const checkProfile = async () => {
@@ -21,6 +22,8 @@ export const AuthProvider = ({ children }) => {
         setIsAuthenticated(true);
       } catch (error) {
         console.error(`error is ${error}`);
+      } finally {
+        setIsLoading(false);
       }
     };
     checkProfile();
@@ -74,7 +77,7 @@ export const AuthProvider = ({ children }) => {
     setIsAuthenticated(false);
   };
 
-  const value = { user, isAuthenticated, Login, Register, Logout };
+  const value = { user, isAuthenticated, Login, Register, Logout, isLoading };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };

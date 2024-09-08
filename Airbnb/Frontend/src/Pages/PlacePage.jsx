@@ -6,10 +6,12 @@ import PlaceGallery from "../Components/Re-usable/PlaceGallery";
 import ExtraInfo from "../Components/PlacePage/ExtraInfo";
 import PlaceDescription from "../Components/PlacePage/PlaceDescription";
 import ShowMorePhotos from "../Components/Re-usable/ShowMorePhotos";
+import LogInModal from "../Components/PlacePage/LogInModal";
 
 const PlacePage = () => {
   const [place, setPlace] = useState(null);
   const [showPhotos, setShowPhotos] = useState(false);
+  const [showModal, setShowModal] = useState(false);
   const { id } = useParams();
 
   useEffect(() => {
@@ -38,10 +40,12 @@ const PlacePage = () => {
 
       <div className="grid grid-cols-[3fr_2fr] my-5 gap-5">
         <PlaceDescription place={place} />
-        <BookingWidget place={place} />
+        <BookingWidget place={place} setShowModal={setShowModal} />
       </div>
 
       <ExtraInfo place={place} />
+
+      {showModal && <LogInModal setShowModal={setShowModal} />}
     </div>
   );
 };
