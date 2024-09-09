@@ -45,7 +45,7 @@ const Bookings = () => {
                 }}
                 key={index}
                 className="w-full bg-gray-200 rounded-2xl flex
-            gap-3.5 overflow-hidden cursor-pointer"
+            gap-3.5 overflow-hidden cursor-pointer dark:bg-gray-900"
               >
                 <div>
                   <img
@@ -56,7 +56,7 @@ const Bookings = () => {
                 </div>
 
                 <div className="flex flex-col justify-evenly">
-                  <span className="font-semibold text-lg text-black">
+                  <span className="font-semibold text-lg">
                     {booking.place.title}
                   </span>
 
@@ -109,7 +109,7 @@ const Bookings = () => {
                       {checkOutFormatted}
                     </div>
 
-                    <div className="flex items-center font-semibold text-xl text-black">
+                    <div className="flex items-center font-semibold text-xl">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         fill="none"

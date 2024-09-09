@@ -40,7 +40,7 @@ const Input = ({
           <input
             {...register(registerName, {
               required: {
-                value: true,
+                value: required,
                 message: `${registerName} is required`,
               },
             })}
@@ -57,7 +57,7 @@ const Input = ({
           <textarea
             {...register(registerName, {
               required: {
-                value: true,
+                value: required,
                 message: `${registerName} is required`,
               },
             })}
@@ -66,11 +66,9 @@ const Input = ({
           />
         )}
       </label>
-      {required && (
-        <p className={errorClasses()}>
-          {errors[registerName] ? `*${errors[registerName].message}` : ""}
-        </p>
-      )}
+      <p className={errorClasses()}>
+        {errors[registerName] ? `*${errors[registerName].message}` : ""}
+      </p>
     </div>
   );
 };

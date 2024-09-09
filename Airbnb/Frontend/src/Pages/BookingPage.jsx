@@ -32,7 +32,7 @@ const BookingPage = () => {
   return showPhotos ? (
     <ShowMorePhotos place={booking?.place} setShowPhotos={setShowPhotos} />
   ) : (
-    <div className="flex flex-col gap-5">
+    <div className="flex flex-col gap-5 dark:text-white">
       <PlaceAddress place={booking?.place} />
 
       <BookingDetails booking={booking} />

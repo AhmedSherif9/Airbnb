@@ -17,13 +17,13 @@ const PlaceItem = ({ place }) => {
           className="object-cover w-64 h-64"
         />
       </Link>
-      <p className="font-semibold text-base truncate">
+      <p className="font-semibold text-base truncate dark:text-white">
         {place.title}
         {", "}
         {place.address}
       </p>
       <p className="text-gray-500 text-sm truncate">{place.description}</p>
-      <p>
+      <p className="dark:text-white">
         <span className="font-semibold text-base">${place.price}</span> per
         night
       </p>

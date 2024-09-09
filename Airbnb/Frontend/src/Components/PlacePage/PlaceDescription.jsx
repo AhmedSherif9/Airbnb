@@ -7,15 +7,15 @@ const PlaceDescription = ({ place }) => {
       </div>
       <div className="flex flex-col gap-0.5 text-sm">
         <p>
-          <span className="text-black">Check-in:</span>
+          <span>Check-in:</span>
           <span className="text-gray-500"> {place?.checkIn}</span>
         </p>
         <p>
-          <span className="text-black">Check-out:</span>{" "}
+          <span>Check-out:</span>{" "}
           <span className="text-gray-500">{place?.checkOut}</span>
         </p>
         <p>
-          <span className="text-black">Maximum number of guests:</span>{" "}
+          <span>Maximum number of guests:</span>{" "}
           <span className="text-gray-500">{place?.maxGuests}</span>
         </p>
       </div>

@@ -16,11 +16,14 @@ const BookingDetails = ({ booking }) => {
       : (checkOut - checkIn) / (1000 * 3600 * 24);
 
   return (
-    <article className="bg-gray-200 flex justify-between items-center p-5 rounded-2xl">
+    <article
+      className="bg-gray-200 flex justify-between items-center p-5 rounded-2xl
+    dark:bg-gray-900"
+    >
       <div className="flex flex-col gap-3 font-semibold">
         <h1 className="text-xl">Your booking information:</h1>
         <div className="flex flex-col gap-0.5">
-          <div className="flex gap-1 items-center font-semibold text-base text-gray-800">
+          <div className="flex gap-1 items-center font-semibold text-base text-gray-500">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
@@ -74,8 +77,10 @@ const BookingDetails = ({ booking }) => {
         className="rounded-2xl flex flex-col items-center
                  bg-primary font-semibold p-5"
       >
-        <h1 className="text-sm text-gray-200">Total price</h1>
-        <h1 className="text-2xl text-white">{`$${booking?.price}`}</h1>
+        <h1 className="text-sm text-gray-200 dark:text-gray-900">
+          Total price
+        </h1>
+        <h1 className="text-2xl text-white dark:text-black">{`$${booking?.price}`}</h1>
       </div>
     </article>
   );

@@ -31,7 +31,7 @@ const PlaceGallery = ({ place, setShowPhotos }) => {
           setShowPhotos(true);
         }}
         className="absolute bottom-0 right-0 bg-white rounded-xl px-3.5 py-1.5 m-2 
-        flex items-center gap-1 shadow-lg shadow-gray-700"
+        flex items-center gap-1 shadow-lg shadow-gray-700 dark:text-black"
       >
         <IoImageSharp className="scale-110" />
         <span className="font-semibold text-sm">Show more photos</span>

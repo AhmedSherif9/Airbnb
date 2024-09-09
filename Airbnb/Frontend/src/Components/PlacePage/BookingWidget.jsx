@@ -59,13 +59,13 @@ const BookingWidget = ({ place, setShowModal }) => {
     <form
       onSubmit={handleSubmit(isAuthenticated && submit)}
       className="bg-gray-300 flex flex-col gap-3 rounded-2xl py-4 px-1.5 
-      shadow-lg shadow-gray-400"
+      shadow-lg shadow-gray-400 dark:bg-gray-900"
     >
-      <div className="text-xl font-semibold mx-auto text-black">
+      <div className="text-xl font-semibold mx-auto">
         {`Price: $${place?.price} ${"/"} per night`}
       </div>
 
-      <div className="w-11/12 mx-auto flex flex-col gap-2 text-black">
+      <div className="w-11/12 mx-auto flex flex-col gap-2">
         <div className="flex justify-between">
           <label className="flex flex-col w-32">
             Check-in:

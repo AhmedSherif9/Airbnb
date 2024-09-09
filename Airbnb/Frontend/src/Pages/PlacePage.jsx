@@ -34,7 +34,7 @@ const PlacePage = () => {
   return showPhotos ? (
     <ShowMorePhotos place={place} setShowPhotos={setShowPhotos} />
   ) : (
-    <div className="flex flex-col gap-2">
+    <div className="flex flex-col gap-2 dark:text-white">
       <PlaceAddress place={place} />
       <PlaceGallery place={place} setShowPhotos={setShowPhotos} />
 
@@ -43,7 +43,7 @@ const PlacePage = () => {
         <BookingWidget place={place} setShowModal={setShowModal} />
       </div>
 
-      <ExtraInfo place={place} />
+      {place?.extraInfo ? <ExtraInfo place={place} /> : <></>}
 
       {showModal && <LogInModal setShowModal={setShowModal} />}
     </div>

@@ -5,7 +5,7 @@ import RegisterForm from "../Components/AuthenticatePage/RegisterForm";
 const AuthenticatePage = () => {
   const [login, setLogin] = useState(true);
   return (
-    <div className="flex flex-col items-center my-20">
+    <div className="flex flex-col items-center my-20 dark:text-white">
       {login ? (
         <>
           <LoginForm />

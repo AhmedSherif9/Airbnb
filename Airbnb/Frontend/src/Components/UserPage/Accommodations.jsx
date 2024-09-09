@@ -33,9 +33,10 @@ const Accommodations = () => {
       <Link
         to={"/userpage/accommodations/newplace"}
         className="bg-primary text-white px-5 py-2
-       rounded-full flex items-center gap-1 font-semibold text-sm"
+       rounded-full flex items-center gap-1 font-semibold text-sm
+       dark:text-black"
       >
-        <IoMdAdd className="text-white scale-125" />
+        <IoMdAdd className="scale-125" />
         Add new place
       </Link>
       {myPlaces?.length > 0 ? (
@@ -48,7 +49,7 @@ const Accommodations = () => {
                 }}
                 key={index}
                 className="w-full bg-gray-200 rounded-2xl flex items-center gap-3.5 
-                p-3.5 cursor-pointer"
+                p-3.5 cursor-pointer dark:bg-gray-900"
               >
                 <div className="w-1/6">
                   <img
@@ -59,11 +60,9 @@ const Accommodations = () => {
                 </div>
 
                 <div className="flex flex-col gap-1 w-5/6">
-                  <span className="font-semibold text-lg text-black">
-                    {place.title}
-                  </span>
+                  <span className="font-semibold text-lg">{place.title}</span>
 
-                  <p className="font-semibold text-sm text-gray-800">
+                  <p className="font-semibold text-sm text-gray-500">
                     {place.description}
                   </p>
                 </div>

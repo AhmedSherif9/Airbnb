@@ -14,7 +14,7 @@ const Header = () => {
   const isHomePage = location.pathname === "/";
 
   return (
-    <header className="flex justify-between items-center relative">
+    <header className="flex justify-between items-center relative dark:text-white">
       <Link
         onClick={close}
         to="/"
@@ -97,9 +97,12 @@ const Header = () => {
         to={isAuthenticated ? "/userpage/profile" : "/authenticate"}
         className="py-1.5 px-4 flex items-center gap-2 border-2 border-gray-200 rounded-full cursor-pointer"
       >
-        <GiHamburgerMenu className="text-gray-600 scale-110" />
-        <div className="rounded-full p-1 bg-gray-600 border border-gray-600 overflow-hidden">
-          <FaUser className="invert relative top-1 scale-125" />
+        <GiHamburgerMenu className="text-gray-600 scale-110 dark:text-white" />
+        <div
+          className="rounded-full p-1 bg-gray-600 border border-gray-600 overflow-hidden
+         dark:bg-white"
+        >
+          <FaUser className="invert relative top-1 scale-125 " />
         </div>
         {isAuthenticated ? (
           <span className="font-semibold">{user.name}</span>

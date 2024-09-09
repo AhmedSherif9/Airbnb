@@ -106,7 +106,7 @@ const NewPlacePage = () => {
   return (
     <form
       onSubmit={handleSubmit(submit)}
-      className="font-semibold flex flex-col gap-3.5 mb-3.5"
+      className="font-semibold flex flex-col gap-3.5 mb-3.5 dark:text-white"
     >
       <Input
         header={"Title"}
@@ -222,7 +222,7 @@ const NewPlacePage = () => {
         </div>
       </div>
 
-      <button className="w-full px-5 py-1.5 rounded-full bg-primary text-white active:scale-99">
+      <button className="w-full px-5 py-1.5 rounded-full bg-primary text-white active:scale-99 dark:text-black">
         Save
       </button>
     </form>
