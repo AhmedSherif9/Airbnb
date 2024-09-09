@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import PlaceItem from "../Components/HomePage/PlaceItem";
 import { useSearch } from "../Context/SearchContext";
+import { Empty } from "antd";
 
 const HomePage = () => {
   const [places, setPlaces] = useState([]);
@@ -43,11 +44,41 @@ const HomePage = () => {
   }, [searchTerm]);
 
   return (
-    <div className="grid grid-cols-3 gap-7">
-      {places?.map((place, index) => {
-        return <PlaceItem key={index} place={place} />;
-      })}
-    </div>
+    <>
+      {places?.length > 0 ? (
+        <div className="grid grid-cols-3 gap-7">
+          {places.map((place, index) => {
+            return <PlaceItem key={index} place={place} />;
+          })}
+        </div>
+      ) : (
+        <div className="flex justify-center">
+          {searchTerm ? (
+            <Empty
+              image={
+                <img
+                  src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTRvDYkbyJJyOOt1oUe5EDKcTjBOYM6hI9Erg&s"
+                  alt=""
+                  className="object-cover rounded-full"
+                />
+              }
+              description="No place matches your search."
+            />
+          ) : (
+            <Empty
+              image={
+                <img
+                  src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ4_UlgiHsRy0ZoqJGYs28X5HecAzd7DJF2Ag&s"
+                  alt=""
+                  className="object-cover rounded-lg"
+                />
+              }
+              description="No places added yet."
+            />
+          )}
+        </div>
+      )}
+    </>
   );
 };
 

@@ -10,8 +10,11 @@ export default {
       height: {
         30: "7.5rem",
       },
+      scale: {
+        98: "0.98",
+        99: "0.99",
+      },
     },
   },
-  // darkMode: "class",
   plugins: [],
 };
