@@ -7,3 +7,8 @@
     @apply transform transition-transform duration-100 ease-in-out active:scale-98;
   }
 }
+
+html,
+body {
+  height: 100%;
+}

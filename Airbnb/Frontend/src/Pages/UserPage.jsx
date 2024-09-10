@@ -9,7 +9,8 @@ const UserPage = () => {
   const classesForButtons = (section) => {
     let classes = "px-5 py-1.5 rounded-full flex items-center gap-1";
     if (section === option) {
-      classes += " bg-primary text-white dark:text-black";
+      classes +=
+        " bg-primary dark:bg-primaryDark text-white dark:text-gray-800";
     } else {
       classes += " bg-gray-200 text-black dark:bg-gray-900 dark:text-white";
     }

@@ -222,7 +222,10 @@ const NewPlacePage = () => {
         </div>
       </div>
 
-      <button className="w-full px-5 py-1.5 rounded-full bg-primary text-white active:scale-99 dark:text-black">
+      <button
+        className="w-full px-5 py-1.5 rounded-full bg-primary dark:bg-primaryDark text-white active:scale-99
+       dark:text-gray-800"
+      >
         Save
       </button>
     </form>

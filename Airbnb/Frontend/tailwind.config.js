@@ -6,6 +6,7 @@ export default {
     extend: {
       colors: {
         primary: "#F5385D",
+        primaryDark: "#9B51E0",
         error: "#d32f2f",
       },
       height: {

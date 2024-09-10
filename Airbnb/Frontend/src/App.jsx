@@ -33,7 +33,7 @@ const App = () => {
   };
 
   return (
-    <div className="p-5 dark:bg-gray-800">
+    <div className="p-5 dark:bg-gray-800 h-screen overflow-auto">
       <BrowserRouter>
         <Toaster />
         <button
@@ -52,7 +52,10 @@ const App = () => {
           <Route path="/" element={<Layout />}>
             <Route index element={<HomePage />} />
             <Route path="places/:id" element={<PlacePage />} />
-            <Route path="authenticate" element={<AuthenticatePage />} />
+            <Route
+              path="authenticate"
+              element={<AuthenticatePage darkMode={darkMode} />}
+            />
             <Route element={<ProtectedRoute />}>
               <Route path="userpage/:option" element={<UserPage />} />
               <Route path="userpage/bookings/:id" element={<BookingPage />} />

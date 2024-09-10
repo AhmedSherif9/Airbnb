@@ -2,13 +2,13 @@ import { useState } from "react";
 import LoginForm from "../Components/AuthenticatePage/LoginForm";
 import RegisterForm from "../Components/AuthenticatePage/RegisterForm";
 
-const AuthenticatePage = () => {
+const AuthenticatePage = ({ darkMode }) => {
   const [login, setLogin] = useState(true);
   return (
     <div className="flex flex-col items-center my-20 dark:text-white">
       {login ? (
         <>
-          <LoginForm />
+          <LoginForm darkMode={darkMode} />
           <p className="text-sm ">
             <span className="text-gray-500">
               {"Don't"} have an account yet?{" "}
@@ -25,7 +25,7 @@ const AuthenticatePage = () => {
         </>
       ) : (
         <>
-          <RegisterForm />
+          <RegisterForm darkMode={darkMode} />
           <p className="text-sm ">
             <span className="text-gray-500">Already a member? </span>
             <span

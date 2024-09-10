@@ -91,7 +91,7 @@ const Photos = ({
             type="text"
             placeholder="Add using a link ....jpg"
             className="flex-grow rounded-full border border-gray-200 px-3 py-1.5 
-      placeholder:text-sm placeholder:font-semibold"
+      placeholder:text-sm placeholder:font-semibold dark:bg-gray-800"
           />
           <button
             type="button"
@@ -99,7 +99,7 @@ const Photos = ({
               addPhotoByLink(getValues("photoLink"));
             }}
             className="bg-gray-200 rounded-xl px-3 py-2.5 text-sm font-semibold 
-    border border-gray-300"
+    border border-gray-300 dark:bg-gray-900"
           >
             Add photo
           </button>

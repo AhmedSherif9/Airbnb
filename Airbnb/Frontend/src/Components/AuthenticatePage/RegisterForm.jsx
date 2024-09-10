@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-hot-toast";
 import { useForm } from "react-hook-form";
 
-const RegisterForm = () => {
+const RegisterForm = ({ darkMode }) => {
   const { Register } = useAuth();
 
   const navigate = useNavigate();
@@ -53,11 +53,11 @@ const RegisterForm = () => {
           sx={{
             "& .MuiOutlinedInput-root": {
               "&.Mui-focused fieldset": {
-                borderColor: "#F5385D",
+                borderColor: darkMode ? "#9B51E0" : "#F5385D",
               },
             },
             "& .MuiInputLabel-root.Mui-focused": {
-              color: "#F5385D",
+              color: darkMode ? "#9B51E0" : "#F5385D",
             },
           }}
         />
@@ -81,11 +81,11 @@ const RegisterForm = () => {
           sx={{
             "& .MuiOutlinedInput-root": {
               "&.Mui-focused fieldset": {
-                borderColor: "#F5385D",
+                borderColor: darkMode ? "#9B51E0" : "#F5385D",
               },
             },
             "& .MuiInputLabel-root.Mui-focused": {
-              color: "#F5385D",
+              color: darkMode ? "#9B51E0" : "#F5385D",
             },
           }}
         />
@@ -145,15 +145,15 @@ const RegisterForm = () => {
           sx={{
             "& .MuiOutlinedInput-root": {
               "&.Mui-focused fieldset": {
-                borderColor: "#F5385D",
+                borderColor: darkMode ? "#9B51E0" : "#F5385D",
               },
             },
             "& .MuiInputLabel-root.Mui-focused": {
-              color: "#F5385D",
+              color: darkMode ? "#9B51E0" : "#F5385D",
             },
           }}
         />
-        <button className="rounded-xl w-full px-4 py-1.5 bg-primary text-white font-semibold">
+        <button className="rounded-xl w-full px-4 py-1.5 bg-primary dark:bg-primaryDark text-white font-semibold">
           Register
         </button>
       </form>

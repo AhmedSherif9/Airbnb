@@ -14,11 +14,11 @@ const Input = ({
   };
 
   const inputClasses = () => {
-    return "w-full rounded-full border border-gray-200 px-3 py-1.5";
+    return "w-full rounded-full border border-gray-200 px-3 py-1.5 dark:bg-gray-800";
   };
 
   const textAreaClasses = () => {
-    return "w-full rounded-2xl border border-gray-200 px-3 py-1.5";
+    return "w-full rounded-2xl border border-gray-200 px-3 py-1.5 dark:bg-gray-800";
   };
 
   const errorClasses = () => {

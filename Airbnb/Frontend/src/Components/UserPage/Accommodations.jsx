@@ -32,9 +32,9 @@ const Accommodations = () => {
     <div className="w-full flex flex-col items-center gap-4">
       <Link
         to={"/userpage/accommodations/newplace"}
-        className="bg-primary text-white px-5 py-2
+        className="bg-primary dark:bg-primaryDark text-white px-5 py-2
        rounded-full flex items-center gap-1 font-semibold text-sm
-       dark:text-black"
+       dark:text-gray-800"
       >
         <IoMdAdd className="scale-125" />
         Add new place

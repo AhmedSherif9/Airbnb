@@ -26,7 +26,7 @@ const Profile = () => {
       <p className="font-semibold">{`Logged in as ${user?.name} (${user?.email})`}</p>
       <button
         onClick={getOut}
-        className="px-5 py-1.5 rounded-full bg-primary text-white dark:text-black"
+        className="px-5 py-1.5 rounded-full bg-primary dark:bg-primaryDark text-white dark:text-gray-800"
       >
         Logout
       </button>

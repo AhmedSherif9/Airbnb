@@ -65,7 +65,7 @@ const BookingWidget = ({ place, setShowModal }) => {
         {`Price: $${place?.price} ${"/"} per night`}
       </div>
 
-      <div className="w-11/12 mx-auto flex flex-col gap-2">
+      <div className="w-11/12 mx-auto flex flex-col gap-2 ">
         <div className="flex justify-between">
           <label className="flex flex-col w-32">
             Check-in:
@@ -77,7 +77,7 @@ const BookingWidget = ({ place, setShowModal }) => {
                   message: "check-in is required",
                 },
               })}
-              className="p-1 rounded-md"
+              className="p-1 rounded-md dark:bg-gray-800"
             />
             <p className={errorClasses()}>
               {isAuthenticated && errors.checkIn
@@ -96,7 +96,7 @@ const BookingWidget = ({ place, setShowModal }) => {
                   message: "check-out is required",
                 },
               })}
-              className="p-1 rounded-md"
+              className="p-1 rounded-md dark:bg-gray-800"
             />
             <p className={errorClasses()}>
               {isAuthenticated && errors.checkOut
@@ -119,7 +119,7 @@ const BookingWidget = ({ place, setShowModal }) => {
                 message: `number of guests has to be less than or equal ${place?.maxGuests}`,
               },
             })}
-            className="p-1 rounded-lg"
+            className="p-1 rounded-lg dark:bg-gray-800"
           />
           <p className={errorClasses()}>
             {isAuthenticated && errors.noOfGuests
@@ -131,8 +131,8 @@ const BookingWidget = ({ place, setShowModal }) => {
 
       <button
         onClick={() => !isAuthenticated && setShowModal(true)}
-        className="w-11/12 mx-auto px-4 py-1.5 bg-primary rounded-xl
-       text-white font-semibold"
+        className="w-11/12 mx-auto px-4 py-1.5 bg-primary dark:bg-primaryDark rounded-xl
+       text-white font-semibold dark:text-gray-800"
       >
         Book this place
       </button>

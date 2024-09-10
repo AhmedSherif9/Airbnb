@@ -75,12 +75,12 @@ const BookingDetails = ({ booking }) => {
 
       <div
         className="rounded-2xl flex flex-col items-center
-                 bg-primary font-semibold p-5"
+                 bg-primary font-semibold p-5 dark:bg-primaryDark"
       >
         <h1 className="text-sm text-gray-200 dark:text-gray-900">
           Total price
         </h1>
-        <h1 className="text-2xl text-white dark:text-black">{`$${booking?.price}`}</h1>
+        <h1 className="text-2xl text-white dark:text-gray-800">{`$${booking?.price}`}</h1>
       </div>
     </article>
   );

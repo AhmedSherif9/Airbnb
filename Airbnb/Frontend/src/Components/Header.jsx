@@ -49,7 +49,7 @@ const Header = () => {
               type="text"
               placeholder="search for a place..."
               className="flex-grow border-none outline-none
-            placeholder:text-sm placeholder:font-semibold"
+            placeholder:text-sm placeholder:font-semibold dark:text-white dark:bg-gray-800"
             />
           </>
         ) : (
@@ -74,19 +74,19 @@ const Header = () => {
           }
           className={`rounded-full p-1 ${
             !isHomePage
-              ? "bg-gray-600"
+              ? "bg-gray-500"
               : searchBar
-              ? "bg-white border border-1 border-primary"
-              : "bg-primary"
+              ? "bg-white border border-1 border-primary dark:bg-gray-800 dark:border-primaryDark"
+              : "bg-primary dark:bg-primaryDark"
           }`}
         >
           <CiSearch
             className={`scale-110 ${
               !isHomePage
-                ? "text-white"
+                ? "text-white dark:text-gray-800"
                 : searchBar
-                ? "text-primary"
-                : "text-white"
+                ? "text-primary dark:text-primaryDark"
+                : "text-white dark:text-gray-800"
             }`}
           />
         </button>
