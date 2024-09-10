@@ -13,6 +13,9 @@ const NewPlacePage = () => {
   const [perks, setPerks] = useState([]);
   const [placePhotos, setPlacePhotos] = useState([]);
 
+  const [photosNotEnough, setPhotosNotEnough] = useState(false);
+  const [saveClickedOn, setSaveClickedOn] = useState(false);
+
   const { id } = useParams();
 
   const fetchMyExistingPlace = async () => {
@@ -94,6 +97,9 @@ const NewPlacePage = () => {
   };
 
   const submit = async (data) => {
+    if (placePhotos.length < 3) {
+      return;
+    }
     data.photos = placePhotos;
     data.perks = perks;
     if (id != "newplace") {
@@ -140,6 +146,9 @@ const NewPlacePage = () => {
         register={register}
         getValues={getValues}
         setValue={setValue}
+        photosNotEnough={photosNotEnough}
+        setPhotosNotEnough={setPhotosNotEnough}
+        saveClickedOn={saveClickedOn}
       />
 
       <Input
@@ -223,6 +232,7 @@ const NewPlacePage = () => {
       </div>
 
       <button
+        onClick={() => setSaveClickedOn(true)}
         className="w-full px-5 py-1.5 rounded-full bg-primary dark:bg-primaryDark text-white active:scale-99
        dark:text-gray-800"
       >

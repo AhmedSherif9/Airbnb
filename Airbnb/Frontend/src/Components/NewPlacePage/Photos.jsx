@@ -3,6 +3,7 @@ import { FaRegTrashAlt } from "react-icons/fa";
 import { FaRegStar } from "react-icons/fa";
 import { MdOutlineCloudUpload } from "react-icons/md";
 import { toast } from "react-hot-toast";
+import { useEffect } from "react";
 
 const Photos = ({
   placePhotos,
@@ -10,16 +11,39 @@ const Photos = ({
   register,
   getValues,
   setValue,
+  photosNotEnough,
+  setPhotosNotEnough,
+  saveClickedOn,
 }) => {
+  useEffect(() => {
+    if (saveClickedOn && placePhotos?.length < 3) {
+      setPhotosNotEnough(true);
+    } else {
+      setPhotosNotEnough(false);
+    }
+  }, [placePhotos, saveClickedOn]);
+
   const labelClasses = () => {
     return "flex flex-col gap-1";
   };
 
+  const errorClasses = () => {
+    return "text-error text-sm";
+  };
+
+  const isImageUrl = (url) => {
+    return /^https?:\/\/.{2,}\.(jpg|jpeg|png|gif|bmp|webp|svg)$/i.test(url);
+  };
+
   const addPhotoByLink = (photo) => {
     toast.loading("Adding Photo", { id: "link", duration: 9000 });
-    setPlacePhotos([...placePhotos, photo]);
-    setValue("photoLink", "");
-    toast.success("Photo Added Successfully", { id: "link", duration: 3000 });
+    if (isImageUrl(photo)) {
+      setPlacePhotos([...placePhotos, photo]);
+      setValue("photoLink", "");
+      toast.success("Photo Added Successfully", { id: "link", duration: 3000 });
+    } else {
+      toast.error("Link Is Invalid", { id: "link", duration: 3000 });
+    }
   };
 
   const addPhotoFromDevice = async (e) => {
@@ -30,7 +54,7 @@ const Photos = ({
     }
 
     try {
-      toast.loading("Uploading Photo", { id: "photo", duration: 9000 });
+      toast.loading("Uploading Photo", { id: "photo", duration: 20000 });
       const response = await fetch("http://localhost:3001/files/upload", {
         method: "POST",
         body: formData,
@@ -164,6 +188,9 @@ const Photos = ({
             </label>
           </article>
         </div>
+      )}
+      {photosNotEnough && (
+        <p className={errorClasses()}>*at least 3 photos are required</p>
       )}
     </div>
   );
