@@ -40,7 +40,6 @@ const BookingWidget = ({ place, setShowModal }) => {
   };
 
   const submit = async (data) => {
-    data.place = place?._id;
     try {
       toast.loading("Booking The Place", {
         id: "booking",
@@ -58,6 +57,7 @@ const BookingWidget = ({ place, setShowModal }) => {
       }
       const price = differenceInDays * place?.price;
       data.price = price;
+      data.place = place?._id;
       const response = await fetch("http://localhost:3001/bookings", {
         method: "POST",
         headers: {
