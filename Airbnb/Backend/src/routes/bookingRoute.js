@@ -30,6 +30,26 @@ router.post("/", validateJWT, async (request, response) => {
   }
 });
 
+router.get("/dates/:placeID", async (request, response) => {
+  try {
+    const { placeID: place } = request.params;
+    const bookings = await BookingModel.find({ place });
+    const allDates = [];
+    bookings.forEach((booking) => {
+      const { checkIn, checkOut } = booking;
+      let currentDate = new Date(checkIn);
+      while (currentDate <= checkOut) {
+        allDates.push(new Date(currentDate));
+        currentDate.setDate(currentDate.getDate() + 1);
+      }
+    });
+    response.status(200).json(allDates);
+  } catch (error) {
+    console.log("error has taken place");
+    response.status(500).send("Something went wrong!");
+  }
+});
+
 //Get A Booking of Mine
 router.get("/:id", validateJWT, async (request, response) => {
   try {

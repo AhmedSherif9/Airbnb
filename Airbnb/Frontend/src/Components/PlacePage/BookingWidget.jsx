@@ -1,12 +1,40 @@
 import { toast } from "react-hot-toast";
 import { useForm } from "react-hook-form";
 import { useAuth } from "../../Context/AuthContext";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import { addDays } from "date-fns";
+import { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
 
 const BookingWidget = ({ place, setShowModal }) => {
   const { isAuthenticated } = useAuth();
 
-  const { register, handleSubmit, formState, getValues } = useForm();
+  const { register, handleSubmit, formState, getValues, setValue } = useForm();
   const { errors } = formState;
+
+  const { id } = useParams();
+  const [disabledDates, setDisabledDates] = useState([]);
+
+  const fetchDates = async () => {
+    try {
+      const response = await fetch(
+        `http://localhost:3001/bookings/dates/${id}`
+      );
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      const data = await response.json();
+      console.log(data);
+      setDisabledDates(data);
+    } catch (error) {
+      console.error("error is ", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchDates();
+  }, []);
 
   const errorClasses = () => {
     return "text-error text-xs";
@@ -14,14 +42,13 @@ const BookingWidget = ({ place, setShowModal }) => {
 
   const submit = async (data) => {
     data.place = place?._id;
-    //console log 1
     try {
       toast.loading("Booking The Place", {
         id: "booking",
         duration: 9000,
       });
-      const checkOut = new Date(getValues("checkOut"));
-      const checkIn = new Date(getValues("checkIn"));
+      const checkOut = getValues("checkOut");
+      const checkIn = getValues("checkIn");
       if (checkOut < checkIn) {
         throw new Error("Check-out must be after Check-in");
       }
@@ -44,11 +71,11 @@ const BookingWidget = ({ place, setShowModal }) => {
         const errorMessage = await response.text();
         throw new Error(errorMessage);
       }
-      //console log 2
       toast.success("Place Is Booked Successfully", {
         id: "booking",
         duration: 3000,
       });
+      fetchDates();
     } catch (error) {
       console.error(`error is ${error}`);
       toast.error(`${error.message}`, { id: "booking", duration: 3000 });
@@ -67,17 +94,24 @@ const BookingWidget = ({ place, setShowModal }) => {
 
       <div className="w-11/12 mx-auto flex flex-col gap-2 ">
         <div className="flex justify-between">
-          <label className="flex flex-col w-32">
-            Check-in:
+          <label className="flex flex-col">
+            Check-In:
+            <DatePicker
+              className="w-32 p-1 rounded-md dark:bg-gray-800"
+              selected={getValues("checkIn") || null}
+              onChange={(date) =>
+                setValue("checkIn", date, { shouldValidate: true })
+              }
+              dateFormat="dd/MM/yyyy"
+              placeholderText="dd/mm/yyyy"
+              minDate={addDays(new Date(), 1)}
+              excludeDates={disabledDates.map((date) => new Date(date))}
+            />
             <input
-              type="date"
+              type="hidden"
               {...register("checkIn", {
-                required: {
-                  value: true,
-                  message: "check-in is required",
-                },
+                required: "Check-in is required",
               })}
-              className="p-1 rounded-md dark:bg-gray-800"
             />
             <p className={errorClasses()}>
               {isAuthenticated && errors.checkIn
@@ -86,17 +120,24 @@ const BookingWidget = ({ place, setShowModal }) => {
             </p>
           </label>
 
-          <label className="flex flex-col w-32">
-            Check-out:
+          <label className="flex flex-col">
+            Check-Out:
+            <DatePicker
+              className="w-32 p-1 rounded-md dark:bg-gray-800"
+              selected={getValues("checkOut") || null}
+              onChange={(date) =>
+                setValue("checkOut", date, { shouldValidate: true })
+              }
+              dateFormat="dd/MM/yyyy"
+              placeholderText="dd/mm/yyyy"
+              minDate={addDays(new Date(), 1)}
+              excludeDates={disabledDates.map((date) => new Date(date))}
+            />
             <input
-              type="date"
+              type="hidden"
               {...register("checkOut", {
-                required: {
-                  value: true,
-                  message: "check-out is required",
-                },
+                required: "Check-out is required",
               })}
-              className="p-1 rounded-md dark:bg-gray-800"
             />
             <p className={errorClasses()}>
               {isAuthenticated && errors.checkOut
@@ -105,6 +146,7 @@ const BookingWidget = ({ place, setShowModal }) => {
             </p>
           </label>
         </div>
+
         <label className="flex flex-col w-full">
           Number of guests:
           <input
