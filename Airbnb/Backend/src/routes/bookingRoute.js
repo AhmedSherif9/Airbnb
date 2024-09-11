@@ -30,6 +30,7 @@ router.post("/", validateJWT, async (request, response) => {
   }
 });
 
+//Get All Dates of A Specific Place
 router.get("/dates/:placeID", async (request, response) => {
   try {
     const { placeID: place } = request.params;
