@@ -6,7 +6,7 @@ const validateJWT = (request, response, next) => {
     response.status(500).send("Not Logged In");
     return;
   }
-  jwt.verify(token, process.env.SECRET_KEY, async (err, payload) => {
+  jwt.verify(token, process.env.SECRET_KEY, (err, payload) => {
     if (err) {
       response.status(500).send("Token is invalid!");
       return;
